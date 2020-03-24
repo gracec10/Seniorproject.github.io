@@ -1,1 +1,86 @@
-hi
+* {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+body {
+    margin: 0px;
+}
+
+.navigation {
+    width: 100%;
+    position: fixed;
+    background-color: lightgray;
+}
+
+.left-nav {
+    margin-left: 75px;
+}
+
+.right-nav {
+    float: right;
+    margin-right: 75px;
+}
+
+.login-only-nav {
+    background-color: darkgray;
+}
+
+.content {
+    margin: 0px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-bottom: 100px;
+    padding-top: 20px;
+    background-color: lightgray;
+}
+
+.butt {
+    border: none;
+    background-color: lightgray;
+    height:50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor:pointer;
+    font-size: 16px;
+    font-weight: bold;
+ }
+ 
+.butt:hover {
+    background-color: white;
+}
+
+.title {
+    padding-top: 50px;
+    background-image: url("../images/leafPhoto.jpg");
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 350px;
+    text-align: center;
+}
+
+.welcome-text {
+    margin-top: 100px;
+    margin-left: 100px;
+    background-color: lightgray;
+    padding: 10px;
+    display: inline-block;
+}
+
+.login-box {
+    display: inline-block;
+    margin-top: 100px;
+    width: 200px;
+    padding: 20px;
+    background-color: lightgreen;
+}
+
+.user-pass {
+    margin-top: 10px;
+}
+
+.login-btn {
+    margin-top: 20px;
+    padding: 10px 20px 10px 20px;
+    border: none;
+}

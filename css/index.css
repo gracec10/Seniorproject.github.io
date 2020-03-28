@@ -2,8 +2,16 @@
     font-family: Helvetica, Arial, sans-serif;
 }
 
+html {
+    height: 100%;
+}
 body {
     margin: 0px;
+    height: 100%;
+}
+
+a {
+    text-decoration: none;
 }
 
 .navigation {
@@ -59,6 +67,33 @@ body {
     text-align: center;
 }
 
+.login-background {
+    background-image: url("../images/leafPhoto.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+}
+
+.login-title {
+    padding-bottom: 25px;
+}
+
+.login-box {
+    width: 400px;
+    padding: 75px 20px 100px 20px;
+    background-color: lightblue;
+}
+
+.login {
+    text-align: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .welcome-text {
     margin-top: 100px;
     margin-left: 100px;
@@ -67,20 +102,25 @@ body {
     display: inline-block;
 }
 
-.login-box {
-    display: inline-block;
-    margin-top: 100px;
-    width: 200px;
-    padding: 20px;
-    background-color: lightgreen;
+input[type="email"],
+input[type="password"] {
+    border: 1px solid #ddd;
+    padding: 6px 8px;
+    margin-left: 10px;
+  }
+  
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border: 1px solid #000;
 }
 
-.user-pass {
-    margin-top: 10px;
+.user-info {
+    margin-top: 30px;
+    font-size: 16px;
 }
 
 .login-btn {
-    margin-top: 20px;
+    margin-top: 30px;
     padding: 10px 20px 10px 20px;
     border: none;
 }

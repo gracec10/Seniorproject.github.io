@@ -5,39 +5,40 @@
   <link href="../css/index.css" type="text/css" rel="stylesheet">
 </head>
 
-<body>
-    <div class="navigation">
-        <a href="index.html">
-          <input class="butt left-nav" type="button" value="Home"/>
-        </a>
-        <a href="exploreProjects.html">
-          <input class="butt left-nav" type="button" value="Explore Projects"/>
-        </a>
-        <a href="createProject.html">
-          <input class="butt left-nav login-only-nav" type="button" value="Create New Project"/>
-        </a>
-        <a href="">
-          <input class="butt left-nav login-only-nav" type="button" value="My Projects"/>
-        </a>
-        <a href="login.html">
-          <input class="butt right-nav" type="button" value="Login"/>
-        </a>
-        <a href="register.html">
-          <input class="butt right-nav" type="button" value="Register"/>
-        </a>
-    </div>
+<body class="login-background">
+  <div class="navigation">
+    <a href="index.html">
+      <input class="butt left-nav" type="button" value="Home"/>
+    </a>
+    <a href="exploreProjects.html">
+      <input class="butt left-nav" type="button" value="Explore Projects"/>
+    </a>
+    <a href="createProject.html">
+      <input class="butt left-nav login-only-nav" type="button" value="Create New Project"/>
+    </a>
+    <a href="">
+      <input class="butt left-nav login-only-nav" type="button" value="My Projects"/>
+    </a>
+    <a href="login.html">
+      <input class="butt right-nav" type="button" value="Login"/>
+    </a>
+    <a href="register.html">
+      <input class="butt right-nav" type="button" value="Register"/>
+    </a>
+  </div>
 
-  <div class="title">
+
+  <div class="login">
     <form action="" method="POST">
       <div class="login-box">
-        <h2>Register</h2>
-        <div class="user-pass">
-          <label for="uname"><b>Username</b></label>
-          <input type="text" placeholder="Enter Username" name="uname" required>
+        <h2 class="login-title">Register</h2>
+        <div class="user-info">
+          <label for="uname"><b>Email</b></label>
+          <input type="email" placeholder="Enter Email" name="uname" required>
         </div>
-        <div class="user-pass">
+        <div class="user-info">
           <label for="psw"><b>Password</b></label>
-          <input type="password" placeholder="Enter Password" name="psw" required>
+          <input type="password" placeholder="Enter Password" name="psw" minlength="8" required>
         </div>
         <button type="submit" class="login-btn">Login</button>
       </div>

@@ -86,6 +86,13 @@ a {
     background-color: lightblue;
 }
 
+.create-project-box {
+    width: 75%;
+    padding: 10px 20px 10px 20px;
+    background-color: lightblue;
+    height: 100%;
+}
+
 .login {
     text-align: center;
     height: 100%;

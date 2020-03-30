@@ -1,0 +1,9 @@
+
+nav > div > ul > li {
+    background-color: "#F8F8F8";
+    transition: 0.3s;
+}
+
+nav > div > ul > li:hover {
+    background-color: white;
+}

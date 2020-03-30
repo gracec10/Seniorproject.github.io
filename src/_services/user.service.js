@@ -31,7 +31,7 @@ function register(firstName, lastName, email, password) {
 }
 
 
-//replace with email once we have the real backend
+//replace username with email once we have the real backend
 function login(username, password) {
     const requestOptions = {
         method: 'POST',

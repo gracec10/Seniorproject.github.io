@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { userService } from '../_services';
+import NavigationBar from '../_components/NavigationBar';
 
 class RegisterPage extends React.Component {
     constructor(props) {
@@ -27,6 +28,7 @@ class RegisterPage extends React.Component {
         this.setState({ [name]: value });
     }
 
+    /* LOGIN HANDLE SUBMIT
     handleSubmit(e) {
         e.preventDefault()
         this.setState({ submitted: true });
@@ -34,12 +36,12 @@ class RegisterPage extends React.Component {
 
         // stop here if form is invalid
         //maybe add more checks on minlength/maxlength of password?  email format?
-        if (!(firstName && lastName && email && password)) {
+        if (!(email && password)) {
             return;
         }
 
         this.setState({ loading: true });
-        userService.register(email, password)
+        userService.login(email, password)
             .then(
                 user => {
                     const { from } = this.props.location.state || { from: { pathname: "/" } };
@@ -48,9 +50,37 @@ class RegisterPage extends React.Component {
                 error => this.setState({ error, loading: false })
             );
     }
+    */
+
+    /*
+    REGISTRATION HANDLE SUBMIT
+
+    the from: {pathname: "/login" } means that after we submit the form, we are taken to the login page
+    */
+    handleSubmit(e) {
+        e.preventDefault()
+        this.setState({ submitted: true });
+        const { firstName, lastName, email, password, returnUrl } = this.state;
+
+        // stop here if form is invalid
+        //maybe add more checks on minlength/maxlength of password?  email format?
+        if (!(firstName && lastName && email && password)) {
+            return;
+        }
+
+        this.setState({ loading: true });
+        userService.register(firstName, lastName, email, password)
+            .then(
+                user => {
+                    const { from } = this.props.location.state || { from: { pathname: "/login" } };
+                    this.props.history.push(from);
+                },
+                error => this.setState({ error, loading: false })
+            );
+    }
 
     render() {
-        const { firstName, lastName, username, email, password, submitted, loading, error } = this.state;
+        const { firstName, lastName, email, password, submitted, loading, error } = this.state;
         return (
             <div className="col-md-6 col-md-offset-3">
                 <h2>Register New Account</h2>

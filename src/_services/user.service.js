@@ -2,11 +2,36 @@ import config from 'config';
 import { authHeader } from '../_helpers';
 
 export const userService = {
+    register,
     login,
     logout,
     getAll
 };
 
+function register(firstName, lastName, email, password) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email, password })
+    };
+    // is `/users/register` ok?
+    return fetch(`${config.apiUrl}/users/register`, requestOptions)
+        .then(handleResponse)
+        .then(user => {
+            // login successful if there's a user in the response
+            if (user) {
+                // store user details and basic auth credentials in local storage 
+                // to keep user logged in between page refreshes
+                user.authdata = window.btoa(email + ':' + password);
+                localStorage.setItem('user', JSON.stringify(user));
+            }
+
+            return user;
+        });   
+}
+
+
+//replace with email once we have the real backend
 function login(username, password) {
     const requestOptions = {
         method: 'POST',

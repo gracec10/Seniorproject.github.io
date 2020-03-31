@@ -1,6 +1,5 @@
 
 .createProjectTitle {
-    background-color: lightgreen;
     text-align: center;
 }
 
@@ -8,10 +7,12 @@
     font-size: 18px;
 }
 
+.collabLabel {
+    font-size: 16px;
+}
 
 .form-row {
     padding-bottom: 40px;
-    border: 3px solid red;
 }
 
 .textarea {
@@ -22,6 +23,12 @@
     text-align: center;
     font-size: 22px;
     padding-bottom: 30px;
+}
+
+.submit {
+    align-items: center;
+    text-align: center;
+    margin-top: 50px;
 }
 
 .divider {

@@ -1,0 +1,32 @@
+
+.createProjectTitle {
+    background-color: lightgreen;
+    text-align: center;
+}
+
+.horLabel {
+    font-size: 18px;
+}
+
+
+.form-row {
+    padding-bottom: 40px;
+    border: 3px solid red;
+}
+
+.textarea {
+    display: block;
+}
+
+.section-heading {
+    text-align: center;
+    font-size: 22px;
+    padding-bottom: 30px;
+}
+
+.divider {
+    display: inline-block;
+    width: 100%;
+    border-top: 1px solid #8c8b8b;
+    margin: 40px 0px 0px 0px;
+}

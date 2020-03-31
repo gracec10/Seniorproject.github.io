@@ -5,6 +5,7 @@ import { PrivateRoute } from '../_components';
 import { HomePage } from '../HomePage';
 import { LoginPage } from '../LoginPage';
 import {RegisterPage} from '../RegisterPage';
+import {CreateProjectPage} from '../CreateProjectPage';
 
 class App extends React.Component {
     render() {
@@ -17,12 +18,13 @@ class App extends React.Component {
         return (
             <div className="jumbotron">
                 <div className="container">
-                    <div className="col-sm-8 col-sm-offset-2">
+                    <div className="col-sm-10 col-sm-offset-1">
                         <Router>
                             <div>
                                 <PrivateRoute exact path="/" component={HomePage} />
                                 <Route path="/login" component={LoginPage} />
                                 <Route path="/register" component={RegisterPage} />
+                                <Route path="/create-new-project" component={CreateProjectPage} />
                             </div>
                         </Router>
                     </div>

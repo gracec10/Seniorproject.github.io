@@ -13,6 +13,7 @@ function NavigationBar (props) {
                         <li><a href="/">Home</a></li>
                         <li><a href="/login">Login</a></li>
                         <li><a href="/register">Register</a></li>
+                        <li><a href="/create-new-project">Create New Project</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Register</a></li>

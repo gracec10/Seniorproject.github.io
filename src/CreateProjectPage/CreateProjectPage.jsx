@@ -1,16 +1,16 @@
 import React from 'react';
+import './CreateProjectPage.css';
 
 import { userService } from '../_services';
 
-class LoginPage extends React.Component {
+class CreateProjectPage extends React.Component {
     constructor(props) {
         super(props);
 
-        userService.logout();
-
         this.state = {
-            email: '',
-            password: '',
+            projectTitle: '',
+            projectDescription: '',
+            collaborators = [],
             submitted: false,
             loading: false,
             error: ''
@@ -28,16 +28,16 @@ class LoginPage extends React.Component {
     handleSubmit(e) {
         e.preventDefault()
         this.setState({ submitted: true });
-        const { email, password, returnUrl } = this.state;
+        const { projectTitle, projectDescription, returnUrl } = this.state;
 
         // stop here if form is invalid
         //maybe add more checks on minlength/maxlength of password?  email format?
-        if (!(email && password)) {
+        if (!(projectTitle && projectDescription)) {
             return;
         }
 
         this.setState({ loading: true });
-        userService.login(email, password)
+        userService.login(projectTitle, projectDescription)
             .then(
                 user => {
                     const { from } = this.props.location.state || { from: { pathname: "/" } };
@@ -46,30 +46,48 @@ class LoginPage extends React.Component {
                 error => this.setState({ error, loading: false })
             );
     }
-    /*
-    Email: test
-    Password: test
-    */
+
+    
     render() {
-        const { email, password, submitted, loading, error } = this.state;
+        const { projectTitle, projectDescription, collaborators, submitted, loading, error } = this.state;
         return (
-            <div className="col-md-8 col-md-offset-2">
-                <h2>Login</h2>
-                <form name="form" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
-                        <label htmlFor="email">Email</label>
-                        <input type="text" className="form-control" name="email" value={email} onChange={this.handleChange} />
-                        {submitted && !email &&
-                            <div className="help-block">Email is required</div>
-                        }
+            <div>
+                <div className="row form-row">
+                    <h2 className="col-sm-12 createProjectTitle">Create New Project</h2>
+                </div>
+
+                <div className="row section-heading">
+                    <h3>Project Overview Information</h3>
+                </div>
+                
+                <form name="form-horizontal" onSubmit={this.handleSubmit}>
+                    <div className={'form-group form-row' + (submitted && !projectTitle ? ' has-error' : '')}>
+                        <label className="col-sm-4 horLabel" htmlFor="projectTitle">Project Title</label>
+                        <div className="col-sm-8">
+                            <input type="text" className="form-control" name="projectTitle" value={projectTitle} onChange={this.handleChange} />
+                            {submitted && !projectTitle &&
+                                <div className="help-block">Project Title is required</div>
+                            }
+                        </div>
                     </div>
-                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
-                        <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
-                        {submitted && !password &&
-                            <div className="help-block">Password is required</div>
-                        }
+
+                    <div className={'form-group form-row' + (submitted && !projectDescription ? ' has-error' : '')}>
+                        <label className="col-sm-4 horLabel" htmlFor="projectDescription">Project Description</label>
+                        <div className="col-sm-8">
+                        <textarea type="textarea" className="form-control textarea" rows="5" name="projectDescription" value={projectDescription} onChange={this.handleChange} />
+                            {submitted && !projectDescription &&
+                                <div className="help-block">Project description is required</div>
+                            }
+                        </div>
                     </div>
+                    
+                    <div className="row section-heading">
+                        <div className="divider"></div>
+                        <h3>Add Collaborators</h3>
+                    </div>
+
+                    
+                   
                     <div className="form-group">
                         <button className="btn btn-primary" disabled={loading}>Login</button>
                         {loading &&
@@ -85,4 +103,4 @@ class LoginPage extends React.Component {
     }
 }
 
-export { LoginPage }; 
+export { CreateProjectPage }; 

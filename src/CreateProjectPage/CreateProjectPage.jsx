@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './CreateProjectPage.css';
 
 import { userService } from '../_services';
 
-class CreateProjectPage extends React.Component {
+class CreateProjectPage extends Component {
     constructor(props) {
         super(props);
 
@@ -135,4 +135,4 @@ class CreateProjectPage extends React.Component {
     }
 }
 
-export { CreateProjectPage }; 
+export default CreateProjectPage; 

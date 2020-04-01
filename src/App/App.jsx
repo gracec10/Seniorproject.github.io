@@ -1,30 +1,51 @@
-import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
+import setAuthToken from "../_utils/setAuthToken";
+import { setCurrentUser, logoutUser } from "../_actions/authActions";
+import store from '../store';
 
-import { PrivateRoute } from '../_components';
-import { HomePage } from '../HomePage';
-import { LoginPage } from '../LoginPage';
-import {RegisterPage} from '../RegisterPage';
-import {CreateProjectPage} from '../CreateProjectPage';
+import PrivateRoute from '../_components/PrivateRoute';
+import HomePage from '../HomePage/HomePage';
+import LoginPage from '../LoginPage/LoginPage';
+import RegisterPage from '../RegisterPage/RegisterPage';
+import CreateProjectPage from '../CreateProjectPage/CreateProjectPage';
 
-class App extends React.Component {
+// Check for token to keep user logged in
+if (localStorage.jwtToken) {
+    // Set auth token header auth
+    const token = localStorage.jwtToken;
+    setAuthToken(token);
+    // Decode token and get user info and exp
+    const decoded = jwt_decode(token);
+    // Set user and isAuthenticated
+    store.dispatch(setCurrentUser(decoded));
+
+    // Check for expired token
+    const currentTime = Date.now() / 1000; // to get in milliseconds
+    if (decoded.exp < currentTime) {
+        // Logout user
+        store.dispatch(logoutUser());
+
+        // Redirect to login
+        window.location.href = "./login";
+    }
+}
+
+class App extends Component {
     render() {
-        /* So the PrivateRoute basically says that if you go to the web address,
-        it creates a PrivateRoute which turns into either the HomePage if the user
-        exists in local storage or it turns into a Route to ./login if it doesn't.
-
-        Need to make /register go to a new register page.
-        */
         return (
             <div className="jumbotron">
                 <div className="container">
                     <div className="col-sm-10 col-sm-offset-1">
                         <Router>
                             <div>
-                                <PrivateRoute exact path="/" component={HomePage} />
-                                <Route path="/login" component={LoginPage} />
                                 <Route path="/register" component={RegisterPage} />
-                                <Route path="/create-new-project" component={CreateProjectPage} />
+                                <Route path="/login" component={LoginPage} />
+                                <Switch>
+                                    <PrivateRoute exact path="/" component={HomePage} />
+                                    <PrivateRoute exact path="/create-new-project" component={CreateProjectPage} />
+                                </Switch>
                             </div>
                         </Router>
                     </div>
@@ -34,4 +55,4 @@ class App extends React.Component {
     }
 }
 
-export { App }; 
+export default App; 

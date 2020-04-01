@@ -1,88 +1,103 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { loginUser } from "../_actions/authActions";
 
-import { userService } from '../_services';
-
-class LoginPage extends React.Component {
-    constructor(props) {
-        super(props);
-
-        userService.logout();
-
+class LoginPage extends Component {
+    constructor() {
+        super();
         this.state = {
-            email: '',
-            password: '',
-            submitted: false,
-            loading: false,
-            error: ''
+            email: "",
+            password: "",
+            errors: {}
+        };
+    };
+
+    componentDidMount() {
+        // If logged in and user navigates to Login page, should redirect them to dashboard
+        if (this.props.auth.isAuthenticated) {
+          this.props.history.push("/create-new-project");
+        }
+      }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.auth.isAuthenticated) {
+            this.props.history.push("/"); // push user to homepage when they login
+        }
+        if (nextProps.errors) {
+            this.setState({
+                errors: nextProps.errors
+            });
+        }
+    }
+
+    onChange = e => {
+        this.setState({ [e.target.id]: e.target.value });
+    };
+
+    onSubmit = e => {
+        e.preventDefault();
+
+        const userData = {
+            email: this.state.email,
+            password: this.state.password
         };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+        console.log(userData);
+        this.props.loginUser(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    };
 
-    handleChange(e) {
-        const { name, value } = e.target;
-        this.setState({ [name]: value });
-    }
+/*
+Test account:
+Email: grace.cheung@yale.edu
+Password: test123
+*/
+render() {
+    return (
+        <div className="col-md-8 col-md-offset-2">
+            <h2>Login</h2>
+            <form name="form" onSubmit={this.onSubmit}>
+                <div className={'form-group'}>
+                    <label htmlFor="email">Email</label>
+                    <input type="email" className="form-control" id="email" value={this.state.email} error={this.state.errors.email} onChange={this.onChange} />
+                    <span>
+                        {this.state.errors.email}
+                        {this.state.errors.emailnotfound}
+                    </span>
+                </div>
 
-    handleSubmit(e) {
-        e.preventDefault()
-        this.setState({ submitted: true });
-        const { email, password, returnUrl } = this.state;
+                <div className={'form-group'}>
+                    <label htmlFor="email">Password</label>
+                    <input type="password" className="form-control" id="password" value={this.state.password} error={this.state.errors.password} onChange={this.onChange} />
+                    <span>
+                        {this.state.errors.password}
+                        {this.state.errors.passwordincorrect}
+                    </span>
+                </div>
 
-        // stop here if form is invalid
-        //maybe add more checks on minlength/maxlength of password?  email format?
-        if (!(email && password)) {
-            return;
-        }
+                <div className="form-group">
+                    <button className="btn btn-primary" type="submit">Login</button>
+                </div>
 
-        this.setState({ loading: true });
-        userService.login(email, password)
-            .then(
-                user => {
-                    const { from } = this.props.location.state || { from: { pathname: "/" } };
-                    this.props.history.push(from);
-                },
-                error => this.setState({ error, loading: false })
-            );
-    }
-    /*
-    Email: test
-    Password: test
-    */
-    render() {
-        const { email, password, submitted, loading, error } = this.state;
-        return (
-            <div className="col-md-8 col-md-offset-2">
-                <h2>Login</h2>
-                <form name="form" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
-                        <label htmlFor="email">Email</label>
-                        <input type="text" className="form-control" name="email" value={email} onChange={this.handleChange} />
-                        {submitted && !email &&
-                            <div className="help-block">Email is required</div>
-                        }
-                    </div>
-                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
-                        <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
-                        {submitted && !password &&
-                            <div className="help-block">Password is required</div>
-                        }
-                    </div>
-                    <div className="form-group">
-                        <button className="btn btn-primary" disabled={loading}>Login</button>
-                        {loading &&
-                            <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                        }
-                    </div>
-                    {error &&
-                        <div className={'alert alert-danger'}>{error}</div>
-                    }
-                </form>
-            </div>
-        );
-    }
-}
+            </form>
+        </div>
+    );
+};
+};
 
-export { LoginPage }; 
+LoginPage.propTypes = {
+    loginUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    auth: state.auth,
+    errors: state.errors
+});
+
+export default connect(
+    mapStateToProps,
+    { loginUser }
+)(LoginPage);

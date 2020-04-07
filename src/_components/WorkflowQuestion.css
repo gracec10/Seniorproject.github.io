@@ -1,0 +1,20 @@
+.question {
+    background-color: #CDD5FF;
+    padding: 10px 20px 10px 20px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.question-text {
+    text-align: center;
+}
+
+.col-sm-2 {
+    text-align: right;
+}
+
+.question-btn {
+    font-size: 14px;
+    margin-right: -15px;
+    border-radius: 4px;
+}

@@ -330,9 +330,11 @@ class CreateProjectPage extends React.Component {
                     <this.displayCategories />
                     <div className={'form-group form-row'}>
                         <label className="col-sm-4 horlabel" htmlFor="newQuestionRequired">Required Question</label>
-                        <div className="col-sm-8">
-                            <input type="checkbox" className="checkbox" name="newQuestionRequired" id="requiredCheck" onClick={this.handleRequiredCheck} checked={newQuestionRequired}/>
-                        </div>
+                        
+                        <label class="container-ch col-sm-8">
+                            <input type="checkbox" className="checkbox ch" name="newQuestionRequired" id="requiredCheck" onClick={this.handleRequiredCheck} checked={newQuestionRequired}/>
+                            <span class="checkmark"></span>
+                        </label>
                     </div> 
                     <div className={'form-group form-row addQuestionCont'}>
                         <button type="button" className="btn btn-primary" onClick={this.handleAddQuestion}>Add Question</button>

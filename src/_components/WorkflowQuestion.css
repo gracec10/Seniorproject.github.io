@@ -74,6 +74,8 @@ i {
   }
   
   .up {
+    margin-top: 7px;
+    margin-bottom: -1px;
     transform: rotate(-135deg);
     -webkit-transform: rotate(-135deg);
   }

@@ -42,7 +42,8 @@ class CreateProjectPage extends React.Component {
             error: ''
         };
 
-        this.handleQuestionDelete = this.handleQuestionDelete.bind(this);
+        this.handleMoveQuestionUp = this.handleMoveQuestionUp.bind(this);
+        this.handleMoveQuestionDown = this.handleMoveQuestionDown.bind(this);
         this.handleAddQuestion = this.handleAddQuestion.bind(this);
         this.handleRequiredCheck = this.handleRequiredCheck.bind(this);
         this.handleQuestionType = this.handleQuestionType.bind(this);
@@ -167,6 +168,28 @@ class CreateProjectPage extends React.Component {
                 error => this.setState({ error, loading: false })
             );
     }
+    handleMoveQuestionUp(qId){
+        if (qId > 1) {
+            let moveUp = this.state.questions.map((question) => {
+                if (question.id == qId) question.id = question.id - 1;
+                else if (question.id == qId - 1) question.id = qId;
+                return question;
+            });
+            moveUp.sort((q1, q2) => (q1.id > q2.id) ? 1 : -1 );
+            this.setState({ questions: moveUp });
+        }
+    }
+    handleMoveQuestionDown(qId){
+        if (qId < this.state.questions.length) {
+            let moveDown = this.state.questions.map((question) => {
+                if (question.id == qId) question.id = question.id + 1;
+                else if (question.id == qId + 1) question.id = qId;
+                return question;
+            });
+            moveDown.sort((q1, q2) => (q1.id > q2.id) ? 1 : -1 );
+            this.setState({ questions: moveDown });
+        }
+    }
     displayCollaborators(){
         const collaborators = this.state.collaborators;
         const listItems = collaborators.map((collaborator) =>
@@ -197,6 +220,9 @@ class CreateProjectPage extends React.Component {
                     categories={question.categories}
                     required={question.required}
                     onDelete={this.handleQuestionDelete}
+                    onMoveUp={this.handleMoveQuestionUp}
+                    onMoveDown={this.handleMoveQuestionDown}
+                    maxQuestions = {this.state.questions.length}
                 />
             </li>                
         );

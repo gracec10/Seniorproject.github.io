@@ -12,16 +12,19 @@ class ProjectSummaryPage extends React.Component {
             currCollab: '',
             projects: [
                 { projectTitle: "Project 1 Title", 
-                    projectDescription: "Project 1 Description", 
+                    projectDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a nulla venenatis, pharetra ex et, ultrices purus. Curabitur nec tincidunt mi. Nulla sodales felis at erat pulvinar scelerisque. Integer bibendum malesuada tincidunt. Donec placerat sem feugiat, fringilla mauris ut, pellentesque magna. ", 
                     access: "Admin",
+                    projectAdmins: ["Person A", "Person B"],
                     percentFinished: 0},
                 { projectTitle: "Project 2 Title", 
                     projectDescription: "Project 2 Description", 
                     access: "Annotator",
+                    projectAdmins: ["Person B"],
                     percentFinished: 25},
                 { projectTitle: "Project 3 Title", 
-                    projectDescription: "Project 3 Description", 
                     access: "Admin",
+                    projectDescription: "Project 3 Description", 
+                    projectAdmins: ["Person B", "Person D", "Person E"],
                     percentFinished: 56}
             ],
         };
@@ -38,6 +41,7 @@ class ProjectSummaryPage extends React.Component {
                <ProjectSummary 
                     title={proj.projectTitle}
                     description={proj.projectDescription}
+                    admins={proj.projectAdmins}
                     access={proj.access}
                     percent={proj.percentFinished}>
                 </ProjectSummary>

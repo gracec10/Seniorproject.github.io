@@ -10,9 +10,9 @@ configureFakeBackend();
 
 render(
     <NavigationBar>
-        <div style={{padding: "50px 0px 0px 0px"}}>
+        
             <App/>
-        </div>
+        
     </NavigationBar>,
     document.getElementById('app')
 );

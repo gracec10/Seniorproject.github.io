@@ -7,3 +7,7 @@ nav > div > ul > li {
 nav > div > ul > li:hover {
     background-color: white;
 }
+
+.app-cont {
+    padding-top: 50px;
+}

@@ -23,7 +23,7 @@ function NavigationBar (props) {
                 </div>
             </nav>
 
-            <div>{props.children}</div>
+            <div className="app-cont">{props.children}</div>
         </div>
     );
 }

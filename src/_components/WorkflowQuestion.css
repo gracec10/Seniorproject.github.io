@@ -5,6 +5,13 @@
     border-radius: 4px;
 }
 
+.proj-cont {
+  background-color: #CDD5FF;
+  padding: 0px 40px 10px 20px;
+  margin-top: 30px;
+  border-radius: 4px;
+}
+
 .question-text {
     text-align: center;
     padding-bottom: 10px;
@@ -66,7 +73,7 @@
 }
 
 .proj {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .move-up-down {

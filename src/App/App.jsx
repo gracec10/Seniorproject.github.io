@@ -7,6 +7,7 @@ import { LoginPage } from '../LoginPage';
 import {RegisterPage} from '../RegisterPage';
 import {CreateProjectPage} from '../CreateProjectPage';
 import { ProjectSummaryPage } from '../ProjectSummaryPage';
+import './App.css';
 
 class App extends React.Component {
     render() {
@@ -17,7 +18,7 @@ class App extends React.Component {
         Need to make /register go to a new register page.
         */
         return (
-            <div className="jumbotron">
+            <div className="jumbotron app-container">
                 <div className="container">
                     <div className="col-sm-10 col-sm-offset-1">
                         <Router>

@@ -6,6 +6,7 @@ import { HomePage } from '../HomePage';
 import { LoginPage } from '../LoginPage';
 import {RegisterPage} from '../RegisterPage';
 import {CreateProjectPage} from '../CreateProjectPage';
+import { ProjectSummaryPage } from '../ProjectSummaryPage';
 
 class App extends React.Component {
     render() {
@@ -25,6 +26,7 @@ class App extends React.Component {
                                 <Route path="/login" component={LoginPage} />
                                 <Route path="/register" component={RegisterPage} />
                                 <Route path="/create-new-project" component={CreateProjectPage} />
+                                <Route path="/projects" component={ProjectSummaryPage} />
                             </div>
                         </Router>
                     </div>

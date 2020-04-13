@@ -1,12 +1,17 @@
 .question {
     background-color: #CDD5FF;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 40px 10px 20px;
     margin-bottom: 15px;
     border-radius: 4px;
 }
 
 .question-text {
     text-align: center;
+    padding-bottom: 10px;
+}
+
+.padding-20 {
+  padding-bottom: 25px;
 }
 
 .word-wrap {
@@ -28,6 +33,40 @@
     right: 0px;
     font-size: 14px;
     border-radius: 4px;
+}
+
+.remove-btn {
+  position: absolute;
+  height: 30px;
+  width: 33%;
+  top: 0px;
+  right: 0px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.edit-btn {
+  position: absolute;
+  height: 30px;
+  width: 33%;
+  top: 0px;
+  left: 0px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.annotate-btn {
+  position: absolute;  
+  height: 30px;
+  width: 34%;
+  top: 0px;
+  right: 33%;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.proj {
+  margin-bottom: 20px;
 }
 
 .move-up-down {

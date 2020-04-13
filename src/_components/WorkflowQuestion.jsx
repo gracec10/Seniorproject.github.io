@@ -17,7 +17,7 @@ class WorkflowQuestion extends Component {
             disabledDown = ":disabled btn-disabled"
         }
         return (
-            <div clasName="row question-row">
+            <div className="row question-row">
                 <div className="col-sm-2">
                     <div>
                         <button type="button" className={"btn btn-xs move-up-down"+disabledUp} onClick={() => this.props.onMoveUp(this.props.id)}>
@@ -34,6 +34,7 @@ class WorkflowQuestion extends Component {
                     <button type="button" className="btn btn-danger x-btn btn-xs" onClick={() => this.props.onDelete(this.props.id)}>
                         X
                     </button>
+                    <div className="padding-15"></div>
                     <h4 className="question-text word-wrap">Question {this.props.id}: {this.props.text}</h4>
                     <h5 className="word-wrap">Description: {this.props.description}</h5>
                     <h5 className="word-wrap">Type: {this.props.type}</h5>

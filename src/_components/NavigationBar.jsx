@@ -14,6 +14,7 @@ function NavigationBar (props) {
                         <li><a href="/login">Login</a></li>
                         <li><a href="/register">Register</a></li>
                         <li><a href="/create-new-project">Create New Project</a></li>
+                        <li><a href="/projects">Project Summary</a></li>
                     </ul>
                     <ul className="nav navbar-nav navbar-right">
                         <li><a href="/register"><span className="glyphicon glyphicon-user"></span> Register</a></li>

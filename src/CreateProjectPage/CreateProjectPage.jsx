@@ -252,7 +252,7 @@ class CreateProjectPage extends React.Component {
             newQuestionText, newQuestionDescription, newQuestionType, 
             newQuestionRequired, questions, submitted, loading, error } = this.state;
         return (
-            <div>
+            <div className="col-sm-10 col-sm-offset-1">
                 <div className="row form-row">
                     <h2 className="col-sm-12 createProjectTitle">Create New Project</h2>
                 </div>

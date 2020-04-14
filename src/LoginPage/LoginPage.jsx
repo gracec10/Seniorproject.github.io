@@ -53,7 +53,7 @@ class LoginPage extends React.Component {
     render() {
         const { email, password, submitted, loading, error } = this.state;
         return (
-            <div className="col-md-8 col-md-offset-2">
+            <div className="col-md-6 col-md-offset-3">
                 <h2>Login</h2>
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>

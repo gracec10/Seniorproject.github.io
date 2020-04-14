@@ -56,7 +56,7 @@ class ProjectSummaryPage extends React.Component {
     
     render() {
         return (
-            <div>
+            <div className="col-sm-10 col-sm-offset-1">
                 <div className="row form-row">
                     <h2 className="col-sm-12 createProjectTitle">Current Projects</h2>
                 </div>

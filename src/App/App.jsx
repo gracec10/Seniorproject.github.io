@@ -7,6 +7,7 @@ import { LoginPage } from '../LoginPage';
 import {RegisterPage} from '../RegisterPage';
 import {CreateProjectPage} from '../CreateProjectPage';
 import { ProjectSummaryPage } from '../ProjectSummaryPage';
+import { AnnotatePage } from '../AnnotatePage';
 import './App.css';
 
 class App extends React.Component {
@@ -20,7 +21,7 @@ class App extends React.Component {
         return (
             <div className="jumbotron app-container">
                 <div className="container">
-                    <div className="col-sm-10 col-sm-offset-1">
+                    <div className="col-sm-12">
                         <Router>
                             <div>
                                 <PrivateRoute exact path="/" component={HomePage} />
@@ -28,6 +29,7 @@ class App extends React.Component {
                                 <Route path="/register" component={RegisterPage} />
                                 <Route path="/create-new-project" component={CreateProjectPage} />
                                 <Route path="/projects" component={ProjectSummaryPage} />
+                                <Route path="/annotate" component={AnnotatePage} />
                             </div>
                         </Router>
                     </div>

@@ -1,4 +1,4 @@
-.divider {
+.annotate-divider {
     display: inline-block;
     width: 30%;
     margin-left: 35%;
@@ -60,14 +60,14 @@
     left: 15px;
     height: 25px;
     width: 25px;
-    background-color:#D3D3D3;
-    border: 1px #c3c3c3 solid;
+    background-color:#c6c6c6;
+    border: 1px #a3a3a3 solid;
     border-radius: 4px;
   }
   
   /* On mouse-over, add a grey background color */
   .container-ch:hover input ~ .checkmark {
-    background-color: #C1C1C1;
+    background-color: #b6b6b6;
     border-color: #A3A3A3;
   }
   

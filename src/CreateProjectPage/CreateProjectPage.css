@@ -10,6 +10,24 @@ label {
     font-weight: normal;
 }
 
+.file-btn {
+  width: 200px;
+  font-size: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.padding-bottom-20 {
+  padding-bottom: 20px;
+}
+
+.padding-bottom-40,
 .form-row {
     padding-bottom: 40px;
 }

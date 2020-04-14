@@ -50,7 +50,7 @@ class AnnotateQuestion extends Component {
         
         return (
             <div className="question-container question-center">
-                <div className="divider"></div>
+                <div className="annotate-divider"></div>
                 <h4>Question {this.props.id}: {this.props.text}</h4>
                 <label htmlFor={"answer"+this.props.id}>{this.props.description}</label>
                 {answer}

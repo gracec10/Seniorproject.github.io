@@ -37,6 +37,7 @@ class CreateProjectPage extends React.Component {
                 categories: "Eagle",
                 required: "true" }
             ],
+            selectedFile: null,
             submitted: false,
             loading: false,
             error: ''
@@ -55,6 +56,30 @@ class CreateProjectPage extends React.Component {
         this.displayCategories = this.displayCategories.bind(this);
     }
 
+    onFileChange = event => {
+        this.setState({ selectedFile: event.target.files[0] }); 
+    }
+
+    onFileUpload = () => { 
+     
+        // Create an object of formData 
+        const formData = new FormData(); 
+       
+        // Update the formData object 
+        formData.append( 
+          "myFile", 
+          this.state.selectedFile, 
+          this.state.selectedFile.name 
+        ); 
+       
+        // Details of the uploaded file 
+        console.log(this.state.selectedFile); 
+       
+        // Request made to the backend api 
+        // Send formData object 
+        //axios.post("api/uploadfile", formData); 
+      }; 
+    
     handleAddQuestion() {
         let categories = "";
         if (this.state.newQuestionType == "Select Category") {
@@ -345,8 +370,21 @@ class CreateProjectPage extends React.Component {
                     <div className={"question-display"}>
                         {this.displayQuestions()}
                     </div> 
-                    <div className="inline-block"></div>
-                    <div className="form-group submit">
+                    <div className="row section-heading">
+                        <div className="divider"></div>
+                        <h3>Upload Project Images</h3>
+                    </div>
+                    <div className={"row sub-section-heading"}>
+                        <h4>Upload a zip file of your project images</h4>
+                    </div>
+                   
+                    <div className="text-align-center padding-bottom-40"> 
+                        <input type="file" className='file-btn' onChange={this.onFileChange} /> 
+                        <button className='file-btn' onClick={this.onFileUpload}> 
+                        Upload! 
+                        </button> 
+                    </div> 
+                    <div className="form-group submit padding-bottom-20">
                         <button className="btn btn-primary" disabled={loading} >Create Project</button>
                         {loading &&
                             <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />

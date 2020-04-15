@@ -50,25 +50,74 @@ class AnnotatePage extends React.Component {
                 id: 1,
                 src: ""
             },
-            answers: [],
+            answers: ["", "", "", ""],
             submitted: false,
             loading: false,
             error: ''
         };
+        this.handleSkipQues = this.handleSkipQues.bind(this);
+        this.handleAnswerNum = this.handleAnswerNum.bind(this);
+        this.handleAnswerSelect = this.handleAnswerSelect.bind(this);
         this.displayQuestions = this.displayQuestions.bind(this);
+    }
+
+    handleAnswerSelect(qId){
+        const e = document.getElementById("answer"+qId);
+        const newQType = e.options[e.selectedIndex].value;
+        const newAnsArr = this.state.answers.map((item, idx) => {
+            if (idx == qId - 1) {
+                return newQType;
+            }
+            else {
+                return item;
+            }
+        });
+        
+        this.setState({answers: newAnsArr});        
+    }
+
+    handleAnswerNum(qId){
+        const e = document.getElementById("answer"+qId);
+        const newQType = e.value;
+        const newAnsArr = this.state.answers.map((item, idx) => {
+            if (idx == qId - 1) {
+                return newQType;
+            }
+            else {
+                return item;
+            }
+        });
+        
+        this.setState({answers: newAnsArr});   
+    }
+
+    handleSkipQues(qId) {
+        const newAnsArr = this.state.answers.map((item, idx) => {
+            if (idx == qId - 1 && this.state.answers[idx] !== "Skip") {
+                return "Skip";
+            }
+            else {
+                return item;
+            }
+        });
+        this.setState({answers: newAnsArr});   
     }
 
     displayQuestions() {
         const questions = this.state.questions;
-        const listItems = questions.map((question) =>
+        const listItems = questions.map((question, idx) =>
             <li className="question-cont">
                 <AnnotateQuestion 
                     id = {question.id}
+                    value = {this.state.answers[idx]}
                     text={question.text}
                     description={question.description}
                     type={question.type}
                     categories={question.categories}
                     required={question.required}
+                    onSelect={this.handleAnswerSelect}
+                    onChangeNum = {this.handleAnswerNum}
+                    onSkip = {this.handleSkipQues}
                 />
             </li>                
         );
@@ -99,6 +148,7 @@ class AnnotatePage extends React.Component {
                             
                             <div className="display-questions">
                                 {this.displayQuestions()}
+                                {answers}
                             </div> 
 
                             <div className="form-group submit">

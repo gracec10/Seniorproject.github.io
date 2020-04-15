@@ -79,16 +79,18 @@ class AnnotatePage extends React.Component {
     handleAnswerNum(qId){
         const e = document.getElementById("answer"+qId);
         const newQType = e.value;
-        const newAnsArr = this.state.answers.map((item, idx) => {
-            if (idx == qId - 1) {
-                return newQType;
-            }
-            else {
-                return item;
-            }
-        });
-        
-        this.setState({answers: newAnsArr});   
+        if (!isNaN(newQType) || (newQType[0] == "-" && !isNaN(newQType.substring(1)) || newQType=="-" || newQType==".")) {
+            const newAnsArr = this.state.answers.map((item, idx) => {
+                if (idx == qId - 1) {
+                    return newQType;
+                }
+                else {
+                    return item;
+                }
+            });
+            
+            this.setState({answers: newAnsArr}); 
+        }         
     }
 
     handleSkipQues(qId) {

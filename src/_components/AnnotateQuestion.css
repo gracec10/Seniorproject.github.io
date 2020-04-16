@@ -20,6 +20,10 @@
     text-align: center;
 }
 
+.annotate-input {
+  border-radius: 4px;
+}
+
 .question-container {
     width: 100%;
     padding: 0px;

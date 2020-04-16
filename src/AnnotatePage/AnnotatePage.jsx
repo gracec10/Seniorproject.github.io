@@ -51,14 +51,21 @@ class AnnotatePage extends React.Component {
                 src: ""
             },
             answers: ["", "", "", ""],
+            optionalNote: "",
             submitted: false,
             loading: false,
             error: ''
         };
+        this.handleChange = this.handleChange.bind(this);
         this.handleSkipQues = this.handleSkipQues.bind(this);
         this.handleAnswerNum = this.handleAnswerNum.bind(this);
         this.handleAnswerSelect = this.handleAnswerSelect.bind(this);
         this.displayQuestions = this.displayQuestions.bind(this);
+    }
+
+    handleChange(e) {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
     }
 
     handleAnswerSelect(qId){
@@ -79,7 +86,9 @@ class AnnotatePage extends React.Component {
     handleAnswerNum(qId){
         const e = document.getElementById("answer"+qId);
         const newQType = e.value;
-        if (!isNaN(newQType) || (newQType[0] == "-" && !isNaN(newQType.substring(1)) || newQType=="-" || newQType==".")) {
+        if (!isNaN(newQType) || 
+            (newQType[0] == "-" && !isNaN(newQType.substring(1)) 
+            || newQType=="-" || newQType=="." || newQType=="-.")) {
             const newAnsArr = this.state.answers.map((item, idx) => {
                 if (idx == qId - 1) {
                     return newQType;
@@ -150,10 +159,16 @@ class AnnotatePage extends React.Component {
                             
                             <div className="display-questions">
                                 {this.displayQuestions()}
-                                {answers}
+                                <div className="annotate-divider"></div>
+                                <div className="optionalNote">
+                                    <h4>Optional Note</h4>
+                                    <label htmlFor="projectDescription">Enter any other important information.</label>
+                                </div>
+                                <textarea type="textarea" className="optional-note-text-area"  name="optionalNote" 
+                                    value={this.state.optionalNote} onChange={this.handleChange} />
                             </div> 
 
-                            <div className="form-group submit">
+                            <div className="form-group submit next-btn">
                                 <button className="btn btn-primary" disabled={loading} >Next</button>
                                 {loading &&
                                     <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />

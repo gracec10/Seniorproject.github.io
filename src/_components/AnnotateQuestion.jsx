@@ -10,7 +10,7 @@ class AnnotateQuestion extends Component {
         let answer = <div></div>
         if (this.props.type == "Yes/No"){
             answer = <div>
-                <select name={"answer"+this.props.id} id={"answer"+this.props.id} onClick={() => this.props.onSelect(this.props.id)}>
+                <select className="annotate-input" name={"answer"+this.props.id} id={"answer"+this.props.id} onClick={() => this.props.onSelect(this.props.id)}>
                     <option hidden disabled selected value> -- select an option -- </option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
@@ -20,7 +20,7 @@ class AnnotateQuestion extends Component {
         else if (this.props.type == "Numerical"){
             answer = <div>
                 <div className="num-entry">
-                    <input type="text" className="form-control" value={displayValue} name={"answer"+this.props.id} id={"answer"+this.props.id} onChange={() => this.props.onChangeNum(this.props.id)} />
+                    <input type="text" className="form-control annotate-input" value={displayValue} name={"answer"+this.props.id} id={"answer"+this.props.id} onChange={() => this.props.onChangeNum(this.props.id)} />
                 </div>
             </div>
         }
@@ -29,7 +29,7 @@ class AnnotateQuestion extends Component {
                 <option value={cat}>{cat}</option>
             );
             answer = <div>
-                <select name={"answer"+this.props.id} value={this.props.value} id={"answer"+this.props.id} onChange={() => this.props.onSelect(this.props.id)}>
+                <select name={"answer"+this.props.id} className="annotate-input" value={this.props.value} id={"answer"+this.props.id} onChange={() => this.props.onSelect(this.props.id)}>
                     <option hidden selected value> -- select an option -- </option>
                     {categories}
                 </select>
@@ -51,7 +51,6 @@ class AnnotateQuestion extends Component {
                 </div>
             
         }
-        
         
         return (
             <div className="question-container question-center">

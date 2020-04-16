@@ -10,6 +10,12 @@ label {
     font-weight: normal;
 }
 
+.add-question-error {
+  color: red;
+  font-size: 18px;
+  text-align: center;
+}
+
 .file-btn {
   width: 200px;
   font-size: 15px;

@@ -10,11 +10,11 @@ class WorkflowQuestion extends Component {
         }
         let disabledUp="";
         if (this.props.id == 1) {
-            disabledUp=":disabled btn-disabled"
+            disabledUp=" disabled btn-disabled"
         }
         let disabledDown="";
         if (this.props.id == this.props.maxQuestions) {
-            disabledDown = ":disabled btn-disabled"
+            disabledDown = " disabled btn-disabled"
         }
         return (
             <div className="row question-row">

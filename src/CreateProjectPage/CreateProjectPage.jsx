@@ -23,6 +23,7 @@ class CreateProjectPage extends React.Component {
             newQuestionType: 'Yes/No',
             newQuestionCategories: "",
             newQuestionRequired: true,
+            addQuestionError: false,
             questions: [
                 {id: 1,
                 text: "Is there a bird?", 
@@ -103,6 +104,9 @@ class CreateProjectPage extends React.Component {
             this.setState({ newQuestionCategories: ""});
             this.setState({ newQuestionRequired: true });
         }
+        else {
+            this.setState({ addQuestionError: true })
+        }
 
     }
     handleRequiredCheck(){
@@ -146,6 +150,9 @@ class CreateProjectPage extends React.Component {
     handleChange(e) {
         const { name, value } = e.target;
         this.setState({ [name]: value });
+        if (name == "newQuestionText") {
+            this.setState({ addQuestionError: false });
+        }
     }
     handleAddCollab() {
         const newCollab = this.state.currCollab;
@@ -276,8 +283,14 @@ class CreateProjectPage extends React.Component {
         const { projectTitle, projectDescription, currCollab, collaborators, 
             newQuestionText, newQuestionDescription, newQuestionType, 
             newQuestionRequired, questions, submitted, loading, error } = this.state;
+        
+        let questionError = <div></div>
+        if (this.state.addQuestionError == true) {
+            questionError = <h3 className="add-question-error">Add a question before adding to the workflow.</h3>
+        }
+
         return (
-            <div className="col-sm-10 col-sm-offset-1">
+            <div className="col-sm-8 col-sm-offset-2">
                 <div className="row form-row">
                     <h2 className="col-sm-12 createProjectTitle">Create New Project</h2>
                 </div>
@@ -361,6 +374,7 @@ class CreateProjectPage extends React.Component {
                             <span class="checkmark"></span>
                         </label>
                     </div> 
+                    {questionError}
                     <div className={'form-group form-row addQuestionCont'}>
                         <button type="button" className="btn btn-primary" onClick={this.handleAddQuestion}>Add Question</button>
                     </div>

@@ -12,8 +12,18 @@
 
 .skip {
     margin-top: 20px;
-    align-self: center;
     width: 100%;
+    align-items: center;
+    text-align: center;
+}
+
+.container-ch-outer {
+  display: inline-block;
+  width: 40px;
+  position: relative;
+  margin-bottom: 5px;
+  align-self: center;
+
 }
 
 .question-center {

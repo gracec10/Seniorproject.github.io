@@ -43,11 +43,14 @@ class AnnotateQuestion extends Component {
         
         if (this.props.required == "false") {
             skip = <div className="skip">
-                    <label className="horizontal" htmlFor="skipCheck">Skip Question:</label>
-                    <label className="container-ch horizontal" >
-                        <input type="checkbox" className="checkbox ch" onClick={() => this.props.onSkip(this.props.id)} name="skipCheck" id="skipCheck" checked={this.props.value == "Skip"}/>
-                        <span className="checkmark"></span>
-                    </label>
+                    <label className="" htmlFor="skipCheck">Skip Question:</label>
+                    <div className="container-ch-outer">
+                        <label className="container-ch " >
+                            <input type="checkbox" className="checkbox ch" onClick={() => this.props.onSkip(this.props.id)} name="skipCheck" id="skipCheck" checked={this.props.value == "Skip"}/>
+                            <span className="checkmark"></span>
+                        </label>
+                    </div>
+                   
                 </div>
             
         }

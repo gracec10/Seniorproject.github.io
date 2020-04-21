@@ -171,7 +171,6 @@ class AnnotatePage extends React.Component {
         if (window.innerWidth > 767) {
             returnVal = 
                 <div className="annotate-cont">
-                    
                     <div className="col-sm-8 img-cont" >
                         <img src={"https://images.unsplash.com/photo-1507477338202-487281e6c27e?ixlib=rb-1.2.1&w=1000&q=80"} />
                     </div>

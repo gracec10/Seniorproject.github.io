@@ -8,6 +8,10 @@ nav > div > ul > li:hover {
     background-color: white;
 }
 
-.app-cont {
-    padding-top: 50px;
+.app-cont-static {
+    margin-top: -20px;
+}
+
+.app-cont-fixed {
+    margin-top: 50px;
 }

@@ -82,7 +82,7 @@ class RegisterPage extends React.Component {
     render() {
         const { firstName, lastName, email, password, submitted, loading, error } = this.state;
         return (
-            <div className="col-md-6 col-md-offset-3">
+            <div className="col-sm-6 col-sm-offset-3">
                 <h2>Register New Account</h2>
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !firstName ? ' has-error' : '')}>

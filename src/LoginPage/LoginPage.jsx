@@ -1,5 +1,6 @@
 import React from 'react';
 
+import './LoginPage.css'
 import { userService } from '../_services';
 
 class LoginPage extends React.Component {
@@ -53,7 +54,7 @@ class LoginPage extends React.Component {
     render() {
         const { email, password, submitted, loading, error } = this.state;
         return (
-            <div className="col-md-6 col-md-offset-3">
+            <div className="col-sm-6 col-sm-offset-3 login-page">
                 <h2>Login</h2>
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>

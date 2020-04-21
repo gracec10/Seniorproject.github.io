@@ -16,6 +16,11 @@ label {
   text-align: center;
 }
 
+textarea {
+  resize: vertical;
+  max-height: 300px;
+}
+
 .file-btn {
   width: 200px;
   font-size: 15px;

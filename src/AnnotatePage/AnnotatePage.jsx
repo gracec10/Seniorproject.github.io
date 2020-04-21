@@ -18,6 +18,7 @@ class AnnotatePage extends React.Component {
         super(props);
 
         this.state = {
+            collapsedBar: "",
             projectTitle: 'Classify the birds',
             projectDescription: 'Here you will classify the birds by species',
             questions: [
@@ -61,6 +62,26 @@ class AnnotatePage extends React.Component {
         this.handleAnswerNum = this.handleAnswerNum.bind(this);
         this.handleAnswerSelect = this.handleAnswerSelect.bind(this);
         this.displayQuestions = this.displayQuestions.bind(this);
+        this.handleWindowResize = this.handleWindowResize.bind(this);
+    }
+
+    componentDidMount() {
+        this.handleWindowResize();
+        window.addEventListener("resize", this.handleWindowResize.bind(this));
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.handleWindowResize.bind(this));
+    }
+    
+
+    handleWindowResize = () => {
+        if (window.innerWidth < 973) {
+            this.setState({ collapsedBar: " static-top" });
+        }
+        else {
+            this.setState({ collapsedBar: " navbar-fixed-top" });
+        }
     }
 
     handleChange(e) {
@@ -140,22 +161,24 @@ class AnnotatePage extends React.Component {
     render() {
         const { projectTitle, projectDescription, questions, answers, 
             image, submitted, loading, error } = this.state;
-        return (
-            <div>
-                <div className="row form-row">
-                    <h2 className="col-sm-12 createProjectTitle">Annotating: {projectTitle}</h2>
-                </div>
-                <div className="row section-heading">
-                    <h3>{projectDescription}</h3>
-                </div>
+        
 
-                <div className="row form-row annotate-cont">
+        let returnVal = 
+            <div className="error-cont">
+                <h3>Screen too small to display image.</h3>
+            </div>
+        
+        if (window.innerWidth > 767) {
+            returnVal = 
+                <div className="annotate-cont">
+                    
                     <div className="col-sm-8 img-cont" >
                         <img src={"https://images.unsplash.com/photo-1507477338202-487281e6c27e?ixlib=rb-1.2.1&w=1000&q=80"} />
                     </div>
                     <div className="col-sm-4 form-cont" >
                         <form name="form-horizontal" className="form-annotate">
-                            <h3 className="form-title">Image #{image.id}</h3>
+                            <h3 className="form-title">Annotating Image #{image.id} of</h3>
+                            <h3 className="form-title"><em>{projectTitle}</em></h3>
                             
                             <div className="display-questions">
                                 {this.displayQuestions()}
@@ -180,7 +203,11 @@ class AnnotatePage extends React.Component {
 
                     </div>
                 </div>
-                
+        }
+
+        return (
+            <div>
+                {returnVal}
             </div>
         );
     }

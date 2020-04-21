@@ -1,9 +1,9 @@
-
-.createProjectTitle {
-    text-align: center;
-    font-size: 35px;
+.error-cont {
+  height: calc(100vh - 395px);
+  padding-top: calc((100vh - 395px)/3);
+  text-align: center;
+  background-color: #eee;
 }
-
 
 img {
   height: 100%;
@@ -12,11 +12,10 @@ img {
 }
 
 .form-cont {
-  background-color: #ddd;
+  background-color: #eee;
   height: 100%;
   padding-left: 0px;
   padding-right: 0px;
-  height: 600px;
   position: absolute;
   right: 0px;
 }
@@ -43,12 +42,13 @@ img {
 .form-annotate {
   overflow-y: auto;
   overflow-wrap: break-word;
-  height: 600px;
+  height: 100%;
 }
 
 .annotate-cont {
   background-color: black;
-  height: 600px;
+  height: calc(100vh - 50px);
+  width: 100%;
   position: relative;
 }
 
@@ -79,9 +79,6 @@ label {
     font-weight: normal;
 }
 
-.form-row {
-    padding-bottom: 30px;
-}
 
 .form-control {
     width: 100%;

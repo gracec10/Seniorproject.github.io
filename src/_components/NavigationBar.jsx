@@ -31,17 +31,17 @@ class NavigationBar extends React.Component {
             this.setState({ collapsedBar: " navbar-fixed-top" });
             this.setState({ appTopMargin: "app-cont-fixed" });
         }
-      }
+    }
 
     
 
     render() {
         return (
-            <div>
+            <div className="nav-page-cont">
                 <nav className={"navbar navbar-default" + this.state.collapsedBar}>
                     <div className="container-fluid">
                         <div className="navbar-header">
-                        <div className="navbar-brand">"Image Annotation"</div>
+                        <div className="navbar-brand">Image Annotation</div>
                         </div>
                         <ul className="nav navbar-nav">
                             <li><a href="/">Home</a></li>

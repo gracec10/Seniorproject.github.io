@@ -290,7 +290,7 @@ class CreateProjectPage extends React.Component {
         }
 
         return (
-            <div className="col-sm-8 col-sm-offset-2">
+            <div className="col-sm-8 col-sm-offset-2 page-outer-cont">
                 <div className="row form-row">
                     <h2 className="col-sm-12 createProjectTitle">Create New Project</h2>
                 </div>

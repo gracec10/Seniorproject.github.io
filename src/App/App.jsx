@@ -19,11 +19,11 @@ class App extends React.Component {
         Need to make /register go to a new register page.
         */
         return (
-            <div className="jumbotron app-container">
-                <div className="container">
-                    <div className="col-sm-12">
+            <div className="jumbotron app-container app-container-outer">
+                <div className="container app-container">
+                    <div className="col-sm-12 app-container">
                         <Router>
-                            <div>
+                            <div className="app-container app-container-inner" >
                                 <PrivateRoute exact path="/" component={HomePage} />
                                 <Route path="/login" component={LoginPage} />
                                 <Route path="/register" component={RegisterPage} />

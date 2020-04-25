@@ -1,120 +1,56 @@
-
-.createProjectTitle {
-    text-align: center;
-    font-size: 35px;
-}
-
-.horLabel,
-label {
-    font-size: 17px;
-    font-weight: normal;
-}
-
-.add-question-error {
-  color: red;
-  font-size: 18px;
-  text-align: center;
-}
-
-textarea {
-  resize: vertical;
-  max-height: 300px;
-}
-
-.file-btn {
-  width: 200px;
-  font-size: 15px;
-  margin-left: auto;
-  margin-right: auto;
-  display: inline-block;
-  margin-top: 20px;
-}
-
-.text-align-center {
-  text-align: center;
-}
-
-.padding-bottom-20 {
-  padding-bottom: 20px;
-}
-
-.padding-bottom-40,
-.form-row {
-    padding-bottom: 40px;
-}
-
-.form-control {
-    width: 100%;
-    margin-left: 0px;
-}
-
-.textarea {
-    display: block;
-}
-
-.inline-block {
+.annotate-divider {
     display: inline-block;
-    width: 100%;
+    width: 30%;
+    margin-left: 35%;
+    margin-right: 35%;
+    padding: 0px;
+    border-top: 1px solid #8c8b8b;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+
+.skip {
     margin-top: 20px;
-}
-
-.section-heading {
-    text-align: center;
-    padding-bottom: 30px;
-}
-
-.submit {
+    width: 100%;
     align-items: center;
     text-align: center;
-    margin-top: 50px;
 }
 
-.divider {
-    display: inline-block;
-    width: 100%;
-    border-top: 1px solid #8c8b8b;
-    margin-top: 40px;
+.container-ch-outer {
+  display: inline-block;
+  width: 40px;
+  position: relative;
+  margin-bottom: 5px;
+  align-self: center;
+
 }
 
-.question-cont,
-.question-display {
-    display: inline-block;
-    width: 100%;
-}
-
-ul {
-    list-style-type: none;
-}
-
-.collaborator-display {
-    margin-top: 40px;
-}
-
-.addQuestionCont {
+.question-center {
     text-align: center;
 }
 
-.sub-section-heading {
-    text-align: center;
-    margin-bottom: 25px;
-    margin-top: -15px;
+.annotate-input {
+  border-radius: 4px;
 }
 
-h3 {
-    font-size: 25px;
+.question-container {
+    width: 100%;
+    padding: 0px;
 }
 
-h4 {
-    font-size: 20px;
+.num-entry {
+    width: 40%;
+    min-width: 30px;
+    margin-left: 30%;
+    margin-right: 30%;
 }
-
 
 /* All code below is for custom checkbox */
-
 .container-ch {
-    display: block;
+    display: inline-block;
     position: relative;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -138,14 +74,14 @@ h4 {
     left: 15px;
     height: 25px;
     width: 25px;
-    background-color:#D3D3D3;
-    border: 1px #c3c3c3 solid;
+    background-color:#c6c6c6;
+    border: 1px #a3a3a3 solid;
     border-radius: 4px;
   }
   
   /* On mouse-over, add a grey background color */
   .container-ch:hover input ~ .checkmark {
-    background-color: #C1C1C1;
+    background-color: #b6b6b6;
     border-color: #A3A3A3;
   }
   
@@ -169,7 +105,7 @@ h4 {
   
   /* Show the checkmark when checked */
   .container-ch input:checked ~ .checkmark:after {
-    display: block;
+    display: inline-block;
   }
   
   /* Style the checkmark/indicator */

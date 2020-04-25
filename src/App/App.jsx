@@ -10,6 +10,10 @@ import HomePage from '../HomePage/HomePage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import CreateProjectPage from '../CreateProjectPage/CreateProjectPage';
+import { AnnotatePage } from '../AnnotatePage/AnnotatePage';
+import { EditProjectPage } from '../EditProjectPage';
+import { ProjectSummaryPage } from '../ProjectSummaryPage/ProjectSummaryPage'
+import './App.css';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -35,13 +39,16 @@ if (localStorage.jwtToken) {
 class App extends Component {
     render() {
         return (
-            <div className="jumbotron">
-                <div className="container">
-                    <div className="col-sm-10 col-sm-offset-1">
+            <div className="jumbotron app-container app-container-outer">
+                <div className="container app-container">
+                    <div className="col-sm-12 app-container">
                         <Router>
-                            <div>
+                            <div className="app-container" >
                                 <Route path="/register" component={RegisterPage} />
                                 <Route path="/login" component={LoginPage} />
+                                <Route path="/annotate" component={AnnotatePage} />
+                                <Route path="/projects" component={ProjectSummaryPage} />
+                                <Route path="/edit-project" component={EditProjectPage} />
                                 <Switch>
                                     <PrivateRoute exact path="/" component={HomePage} />
                                     <PrivateRoute exact path="/create-new-project" component={CreateProjectPage} />

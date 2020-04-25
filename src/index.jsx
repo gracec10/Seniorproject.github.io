@@ -4,17 +4,17 @@ import { Provider } from 'react-redux';
 import store from './store';
 
 import App from './App/App';
-import NavigationBar from "./_components/NavigationBar";
-
-// setup fake backend
-// import { configureFakeBackend } from './_helpers';
-// configureFakeBackend();
+import { NavigationBar } from "./_components/NavigationBar";
+import './index.css';
 
 render(
     <Provider store={store}>
-    <NavigationBar>
-            <App />
-    </NavigationBar>,
+        <div className="h">
+            <NavigationBar>
+                <App />
+            </NavigationBar>
+        </div>
+        
     </Provider>,
     document.getElementById('app')
 );

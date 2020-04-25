@@ -7,3 +7,18 @@ nav > div > ul > li {
 nav > div > ul > li:hover {
     background-color: white;
 }
+
+.nav-page-cont {
+    margin: 0px;
+    height: 100%;
+}
+
+.app-cont-static {
+    padding-top: 0px;
+    height: 100%;
+}
+
+.app-cont-fixed {
+    padding-top: 70px;
+    height: 100%;
+}

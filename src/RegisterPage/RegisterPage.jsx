@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "../_actions/authActions";
@@ -16,6 +16,11 @@ class RegisterPage extends Component {
             password2: '',
             errors: {}
         };
+
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.componentWillReceiveProps = this.componentWillReceiveProps.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     };
 
     componentDidMount() {
@@ -54,7 +59,7 @@ class RegisterPage extends Component {
 
     render() {
         return (
-            <div className="col-md-8 col-md-offset-2">
+            <div className="col-sm-6 col-sm-offset-3 page-outer-cont">
                 <h2>Register New Account</h2>
                 <form name="form" onSubmit={this.onSubmit}>
                     <div className={'form-group'}>
@@ -72,25 +77,53 @@ class RegisterPage extends Component {
 
                     <div className={'form-group'}>
                         <label htmlFor="lastName">Last Name</label>
-                        <input type="text" className="form-control" id="lastName" value={this.state.lastName} error={this.state.errors.lastName} onChange={this.onChange} />
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="lastName" 
+                            value={this.state.lastName} 
+                            error={this.state.errors.lastName} 
+                            onChange={this.onChange} 
+                        />
                         <span>{this.state.errors.lastName}</span>
                     </div>
 
                     <div className={'form-group'}>
                         <label htmlFor="email">Email</label>
-                        <input type="text" className="form-control" id="email" value={this.state.email} error={this.state.errors.email} onChange={this.onChange} />
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="email" 
+                            value={this.state.email} 
+                            error={this.state.errors.email} 
+                            onChange={this.onChange} 
+                        />
                         <span>{this.state.errors.email}</span>
                     </div>
 
                     <div className={'form-group'}>
                         <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" id="password" value={this.state.password} error={this.state.errors.password} onChange={this.onChange} />
+                        <input 
+                            type="password" 
+                            className="form-control" 
+                            id="password" 
+                            value={this.state.password} 
+                            error={this.state.errors.password} 
+                            onChange={this.onChange} 
+                        />
                         <span>{this.state.errors.password}</span>
                     </div>
 
                     <div className={'form-group'}>
                         <label htmlFor="password2">Confirm Password</label>
-                        <input type="password" className="form-control" id="password2" value={this.state.password2} error={this.state.errors.password2} onChange={this.onChange} />
+                        <input 
+                            type="password" 
+                            className="form-control" 
+                            id="password2" 
+                            value={this.state.password2} 
+                            error={this.state.errors.password2} 
+                            onChange={this.onChange} 
+                        />
                         <span>{this.state.errors.password2}</span>
                     </div>
 

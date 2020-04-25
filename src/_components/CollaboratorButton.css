@@ -1,0 +1,33 @@
+.collaborator-cont {
+    margin-top: 15px;
+    text-align: center;
+}
+
+select,
+.collaborator-text{
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.collaborator-delete,
+.collaborator-text,
+select {
+    font-size: 15px;
+}
+
+.btn-danger,
+select {
+    height: 35px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+select {
+    border-color: lightgrey;
+}
+select:hover {
+    border-color: darkgray;
+}
+select:focus {
+    border-color: #aaa;
+}

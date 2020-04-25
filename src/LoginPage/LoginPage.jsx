@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { loginUser } from "../_actions/authActions";
 
 class LoginPage extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             email: "",
             password: "",
             errors: {}
         };
+        this.componentWillReceiveProps = this.componentWillReceiveProps.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     };
 
     componentDidMount() {
@@ -45,7 +47,8 @@ class LoginPage extends Component {
         };
 
         console.log(userData);
-        this.props.loginUser(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+        this.props.loginUser(userData); 
+        // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
     };
 
 /*
@@ -54,13 +57,21 @@ Email: grace.cheung@yale.edu
 Password: test123
 */
 render() {
+    const { email, password } = this.state;
     return (
-        <div className="col-md-8 col-md-offset-2">
+        <div className="col-sm-6 col-sm-offset-3 page-outer-cont">
             <h2>Login</h2>
             <form name="form" onSubmit={this.onSubmit}>
                 <div className={'form-group'}>
                     <label htmlFor="email">Email</label>
-                    <input type="email" className="form-control" id="email" value={this.state.email} error={this.state.errors.email} onChange={this.onChange} />
+                    <input 
+                        type="email" 
+                        className="form-control" 
+                        id="email" 
+                        value={email} 
+                        error={this.state.errors.email} 
+                        onChange={this.onChange} 
+                    />
                     <span>
                         {this.state.errors.email}
                         {this.state.errors.emailnotfound}
@@ -69,7 +80,14 @@ render() {
 
                 <div className={'form-group'}>
                     <label htmlFor="email">Password</label>
-                    <input type="password" className="form-control" id="password" value={this.state.password} error={this.state.errors.password} onChange={this.onChange} />
+                    <input 
+                        type="password" 
+                        className="form-control" 
+                        id="password" 
+                        value={password} 
+                        error={this.state.errors.password} 
+                        onChange={this.onChange} 
+                    />
                     <span>
                         {this.state.errors.password}
                         {this.state.errors.passwordincorrect}

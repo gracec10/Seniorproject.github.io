@@ -1,18 +1,23 @@
-import React, { Component } from 'react';
-import './CreateProjectPage.css';
-import { CollaboratorButton } from '../_components/CollaboratorButton';
+import React from 'react';
+import './EditProjectPage.css';
+import {CollaboratorButton} from '../_components/CollaboratorButton';
 import {WorkflowQuestion} from '../_components/WorkflowQuestion';
+
 import { userService } from '../_services';
 
-class CreateProjectPage extends Component {
+class EditProjectPage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            projectTitle: '',
-            projectDescription: '',
+            projectTitle: 'Classify the birds',
+            projectDescription: 'In this project you will classify bird types.',
             currCollab: '',
-            collaborators: [],
+            collaborators: [
+                { id: 1, value: "test1@gmail.com", access: "Admin"},
+                { id: 2, value: "test2@gmail.com", access: "Admin"},
+                { id: 3, value: "test3@gmail.com", access: "Admin"}
+            ],
             newQuestionText: '',
             newQuestionDescription: '',
             newQuestionType: 'Yes/No',
@@ -41,7 +46,6 @@ class CreateProjectPage extends Component {
 
         this.handleMoveQuestion = this.handleMoveQuestion.bind(this);
         this.handleAddQuestion = this.handleAddQuestion.bind(this);
-        this.handleQuestionDelete = this.handleQuestionDelete.bind(this);
         this.handleRequiredCheck = this.handleRequiredCheck.bind(this);
         this.handleQuestionType = this.handleQuestionType.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -52,27 +56,30 @@ class CreateProjectPage extends Component {
         this.displayCategories = this.displayCategories.bind(this);
     }
 
-    handleMoveQuestion(qId, dir){
-        const questions = this.state.questions;
-        let newQuestions = questions;
-        if (dir == "up" && qId > 1) {
-            newQuestions = questions.map((question) => {
-                if (question.id == qId) question.id = question.id - 1;
-                else if (question.id == qId - 1) question.id = qId;
-                return question;
-            });
-        }
-        else if (dir == "down" && qId < questions.length) {
-            newQuestions = questions.map((question) => {
-                if (question.id == qId) question.id = question.id + 1;
-                else if (question.id == qId + 1) question.id = qId;
-                return question;
-            });        
-        }      
-        newQuestions.sort((q1, q2) => (q1.id > q2.id) ? 1 : -1 );
-        this.setState({ questions: newQuestions });  
+    onFileChange = event => {
+        this.setState({ selectedFile: event.target.files[0] }); 
     }
 
+    onFileUpload = () => { 
+     
+        // Create an object of formData 
+        const formData = new FormData(); 
+       
+        // Update the formData object 
+        formData.append( 
+          "myFile", 
+          this.state.selectedFile, 
+          this.state.selectedFile.name 
+        ); 
+       
+        // Details of the uploaded file 
+        console.log(this.state.selectedFile); 
+       
+        // Request made to the backend api 
+        // Send formData object 
+        //axios.post("api/uploadfile", formData); 
+      }; 
+    
     handleAddQuestion() {
         let categories = "";
         if (this.state.newQuestionType == "Select Category") {
@@ -101,7 +108,28 @@ class CreateProjectPage extends Component {
         }
 
     }
-
+    handleRequiredCheck(){
+        const e = document.getElementById("requiredCheck");
+        if (e.checked == true) this.setState({newQuestionRequired: true}); 
+        else this.setState({newQuestionRequired: false}); 
+    }
+    handleQuestionType(){
+        const e = document.getElementById("questionType");
+        const newQType = e.options[e.selectedIndex].value;
+        this.setState({newQuestionType: newQType});
+    }
+    handleToggleAccess = (collabId) => {
+        const collaborators = this.state.collaborators.map((item) => {
+            if (item.id === collabId && item.access==="Admin") {
+                item.access="Annotator";
+            }
+            else if (item.id === collabId && item.access==="Annotator") {
+                item.access="Admin";
+            }            
+            return item;
+        });
+        this.setState({collaborators: collaborators});
+    }
     handleQuestionDelete = qId => {
         const ques = this.state.questions.filter(question => question.id != qId);
         const resetId = ques.map((item, idx) => {
@@ -110,19 +138,14 @@ class CreateProjectPage extends Component {
         });
         this.setState({ questions: resetId });
     }
-
-    handleRequiredCheck(){
-        const e = document.getElementById("requiredCheck");
-        if (e.checked == true) this.setState({newQuestionRequired: true}); 
-        else this.setState({newQuestionRequired: false}); 
+    handleCollabDelete = collabId => {
+        const collabo = this.state.collaborators.filter(collaborator => collaborator.id !== collabId);
+        const resetId = collabo.map((item, idx) => {
+            item.id=idx+1;
+            return item;
+        });
+        this.setState({ collaborators: resetId });
     }
-
-    handleQuestionType(){
-        const e = document.getElementById("questionType");
-        const newQType = e.options[e.selectedIndex].value;
-        this.setState({newQuestionType: newQType});
-    }
-
     handleChange(e) {
         const { name, value } = e.target;
         this.setState({ [name]: value });
@@ -130,29 +153,6 @@ class CreateProjectPage extends Component {
             this.setState({ addQuestionError: false });
         }
     }
-
-    handleSubmit(e) {
-        e.preventDefault()
-        this.setState({ submitted: true });
-        const { projectTitle, projectDescription, returnUrl } = this.state;
-
-        // stop here if form is invalid
-        //maybe add more checks on minlength/maxlength of password?  email format?
-        if (!(projectTitle && projectDescription)) {
-            return;
-        }
-
-        this.setState({ loading: true });
-        userService.login(projectTitle, projectDescription)
-            .then(
-                user => {
-                    const { from } = this.props.location.state || { from: { pathname: "/" } };
-                    this.props.history.push(from);
-                },
-                error => this.setState({ error, loading: false })
-            );
-    }
-
     handleAddCollab() {
         const newCollab = this.state.currCollab;
         let duplicates = false;
@@ -178,7 +178,65 @@ class CreateProjectPage extends Component {
         }
         
     }
+    handleSubmit(e) {
+        e.preventDefault()
+        this.setState({ submitted: true });
+        const { projectTitle, projectDescription, returnUrl } = this.state;
 
+        // stop here if form is invalid
+        //maybe add more checks on minlength/maxlength of password?  email format?
+        if (!(projectTitle && projectDescription)) {
+            return;
+        }
+
+        this.setState({ loading: true });
+        userService.login(projectTitle, projectDescription)
+            .then(
+                user => {
+                    const { from } = this.props.location.state || { from: { pathname: "/" } };
+                    this.props.history.push(from);
+                },
+                error => this.setState({ error, loading: false })
+            );
+    }
+    handleMoveQuestion(qId, dir){
+        const questions = this.state.questions;
+        let newQuestions = questions;
+        if (dir == "up" && qId > 1) {
+            newQuestions = questions.map((question) => {
+                if (question.id == qId) question.id = question.id - 1;
+                else if (question.id == qId - 1) question.id = qId;
+                return question;
+            });
+        }
+        else if (dir == "down" && qId < questions.length) {
+            newQuestions = questions.map((question) => {
+                if (question.id == qId) question.id = question.id + 1;
+                else if (question.id == qId + 1) question.id = qId;
+                return question;
+            });        
+        }      
+        newQuestions.sort((q1, q2) => (q1.id > q2.id) ? 1 : -1 );
+        this.setState({ questions: newQuestions });  
+    }
+    displayCollaborators(){
+        const collaborators = this.state.collaborators;
+        const listItems = collaborators.map((collaborator) =>
+            <li>
+                <CollaboratorButton 
+                    value={collaborator.value}
+                    id={collaborator.id}
+                    access={collaborator.access}
+                    onDelete={this.handleCollabDelete}
+                    onChangeAccess={this.handleToggleAccess}>
+                </CollaboratorButton>
+            </li>
+        );
+
+        return (
+            <ul>{listItems}</ul>
+        );
+    }
     displayQuestions() {
         const questions = this.state.questions;
         const listItems = questions.map((question) =>
@@ -200,7 +258,6 @@ class CreateProjectPage extends Component {
             <ul>{listItems}</ul>
         );
     }
-
     displayCategories(){
         const newQuestionCategories = this.state.newQuestionCategories;
         if (this.state.newQuestionType == "Select Category") {
@@ -217,24 +274,6 @@ class CreateProjectPage extends Component {
             return <div></div>
         }
     }
-
-    displayCollaborators(){
-        const collaborators = this.state.collaborators;
-        const listItems = collaborators.map((collaborator) =>
-            <li>
-                <CollaboratorButton 
-                    value={collaborator.value}
-                    id={collaborator.id}
-                    access={collaborator.access}
-                    onDelete={this.handleCollabDelete}
-                    onChangeAccess={this.handleToggleAccess}>
-                </CollaboratorButton>
-            </li>
-        );
-        return (
-            <ul>{listItems}</ul>
-        );
-    }
     
     render() {
         const { projectTitle, projectDescription, currCollab, collaborators, 
@@ -249,7 +288,7 @@ class CreateProjectPage extends Component {
         return (
             <div className="col-sm-10 col-sm-offset-1 page-outer-cont">
                 <div className="row form-row">
-                    <h2 className="col-sm-12 createProjectTitle">Create New Project</h2>
+                    <h2 className="col-sm-12 createProjectTitle">Edit Project</h2>
                 </div>
                 <div className="row section-heading">
                     <h3>Project Overview Information</h3>
@@ -356,7 +395,7 @@ class CreateProjectPage extends Component {
                         </button> 
                     </div> 
                     <div className="form-group submit padding-bottom-20">
-                        <button className="btn btn-primary" disabled={loading} >Create Project</button>
+                        <button className="btn btn-primary" disabled={loading} >Update Project</button>
                         {loading &&
                             <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                         }
@@ -370,4 +409,4 @@ class CreateProjectPage extends Component {
     }
 }
 
-export default CreateProjectPage; 
+export { EditProjectPage }; 

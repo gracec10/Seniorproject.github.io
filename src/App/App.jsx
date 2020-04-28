@@ -46,12 +46,12 @@ class App extends Component {
                             <div className="app-container" >
                                 <Route path="/register" component={RegisterPage} />
                                 <Route path="/login" component={LoginPage} />
-                                <Route path="/annotate" component={AnnotatePage} />
-                                <Route path="/projects" component={ProjectSummaryPage} />
-                                <Route path="/edit-project" component={EditProjectPage} />
+                                <Route exact path="/" component={HomePage} />
                                 <Switch>
-                                    <PrivateRoute exact path="/" component={HomePage} />
                                     <PrivateRoute exact path="/create-new-project" component={CreateProjectPage} />
+                                    <PrivateRoute path="/annotate" component={AnnotatePage} />
+                                    <PrivateRoute path="/projects" component={ProjectSummaryPage} />
+                                    <PrivateRoute path="/edit-project" component={EditProjectPage} />
                                 </Switch>
                             </div>
                         </Router>

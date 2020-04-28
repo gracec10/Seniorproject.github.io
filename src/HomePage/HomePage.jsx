@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../_actions/authActions";
+import "./HomePage.css";
+import "../index.css";
 
 class HomePage extends Component {
     onLogoutClick = e => {
@@ -11,11 +13,11 @@ class HomePage extends Component {
 
     render() {
         const { user } = this.props.auth;
+        const firstName = (user.firstName !== undefined) ? (" " + user.firstName ) : ("");
 
         return (
-            <div className="col-md-6 col-md-offset-3">
-                <h1>Hi {user.firstName}!</h1>
-                <p>You're logged in!</p>
+            <div className="col-md-6 col-md-offset-3 welcome-cont page-outer-cont">
+                <h2 className="welcome-title">Welcome to Image Annotation{firstName}!</h2>
                 <button onClick={this.onLogoutClick}>Logout</button>
             </div>
         );

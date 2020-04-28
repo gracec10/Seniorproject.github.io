@@ -51,25 +51,6 @@
     font-size: 14px;
 }
 
-.remove-btn,
-.edit-btn,
-.annotate-btn {
-  position: absolute;
-  height: 30px;
-  top: 0px;
-  right: 0px;
-  font-size: 14px;
-}
-
-.remove-btn,
-.edit-btn {
-  width: 33%;
-}
-
-.annotate-btn {
-    width: 34%;
-}
-
 .proj {
   margin-bottom: 40px;
 }

@@ -1,0 +1,27 @@
+.remove-btn,
+.edit-btn,
+.annotate-btn {
+  position: absolute;
+  height: 30px;
+  top: 0px;
+  font-size: 14px;
+}
+
+.remove-btn,
+.edit-btn {
+  width: 33%;
+}
+
+.annotate-btn {
+    width: 34%;
+}
+
+.remove-btn {
+  right: 0px;
+}
+.edit-btn {
+  right: 33%;
+}
+.annotate-btn {
+  left: 0px;
+}

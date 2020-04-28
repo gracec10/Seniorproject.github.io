@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './WorkflowQuestion.css';
+import './ProjectSummary.css';
 
 
 class ProjectSummary extends Component {
@@ -29,13 +30,13 @@ class ProjectSummary extends Component {
                 <div>
                     <div className="col-sm-2"> </div>   
                     <div className="col-sm-8">
-                    <button type="button" className="btn btn-danger remove-btn btn-xs">
-                        Remove Project
-                    </button>
-                    <button type="button" className="btn btn-primary annotate-btn btn-xs">
-                        Annotate Images
-                    </button>
-                    <div>{editBtn}</div>
+                        <button type="button" className="btn btn-danger remove-btn btn-xs">
+                            Remove Project
+                        </button>
+                        <button type="button" className="btn btn-primary annotate-btn btn-xs">
+                            Annotate Images
+                        </button>
+                        <div>{editBtn}</div>
                     </div>
                     <div className="col-sm-2"> </div>   
                 </div>

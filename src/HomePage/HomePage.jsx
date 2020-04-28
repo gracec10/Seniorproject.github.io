@@ -6,10 +6,6 @@ import "./HomePage.css";
 import "../index.css";
 
 class HomePage extends Component {
-    onLogoutClick = e => {
-        e.preventDefault();
-        this.props.logoutUser();
-      };
 
     render() {
         const { user } = this.props.auth;
@@ -18,7 +14,6 @@ class HomePage extends Component {
         return (
             <div className="col-md-6 col-md-offset-3 welcome-cont page-outer-cont">
                 <h2 className="welcome-title">Welcome to Image Annotation{firstName}!</h2>
-                <button onClick={this.onLogoutClick}>Logout</button>
             </div>
         );
     }

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 
 import App from './App/App';
-import { NavigationBar } from "./_components/NavigationBar";
+import NavigationBar from "./_components/NavigationBar";
 import './index.css';
 
 render(

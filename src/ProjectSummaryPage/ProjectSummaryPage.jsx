@@ -1,15 +1,16 @@
 import React from 'react';
 import './ProjectSummaryPage.css';
-import {ProjectSummary} from '../_components/ProjectSummary';
+import { ProjectSummary } from '../_components/ProjectSummary';
+import axios from 'axios';
+import jwt_decode from "jwt-decode";
 
 class ProjectSummaryPage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            projectTitle: '',
-            projectDescription: '',
-            currCollab: '',
+            testProjects: [],
+            currUser: "", //the id of the logged in user
             projects: [
                 { projectTitle: "Project 1 Title", 
                     projectDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a nulla venenatis, pharetra ex et, ultrices purus. Curabitur nec tincidunt mi. Nulla sodales felis at erat pulvinar scelerisque. Integer bibendum malesuada tincidunt. Donec placerat sem feugiat, fringilla mauris ut, pellentesque magna. ", 
@@ -30,28 +31,49 @@ class ProjectSummaryPage extends React.Component {
         };
 
         this.displayProjects = this.displayProjects.bind(this);
-        
+        this.componentDidMount = this.componentDidMount.bind(this);
     
+    }
+
+    componentDidMount() {
+        // Gets all of the projects that the current user has access to
+        axios.get('http://localhost:5000/api/projects/')
+            .then(res => {
+                const userProjects = res.data;
+                this.setState({ testProjects: userProjects });
+            })
+        let tok = localStorage.getItem('jwtToken');
+        console.log(tok);
+        let decoded = jwt_decode(tok);
+        this.setState({ currUser: decoded.id});
     }
     
     displayProjects() {
-        const projects = this.state.projects;
-        const listItems = projects.map((proj) =>
-            <li>
-               <ProjectSummary 
-                    title={proj.projectTitle}
-                    description={proj.projectDescription}
-                    admins={proj.projectAdmins}
-                    access={proj.access}
-                    percent={proj.percentFinished}>
-                </ProjectSummary>
-           </li>                
-        );
-        return (
-            <ul>
-                {listItems}
-            </ul>
-        );
+        const projects = this.state.testProjects;
+        
+        if (projects.length == 0) {
+            return <div></div>;
+        }
+        else {
+
+            const listItems = projects.map((proj) =>
+                <li>
+                    <ProjectSummary 
+                        currUser={this.state.currUser}
+                        title={proj.title}
+                        description={proj.description}
+                        admins={proj.adminIDs}
+                        researchers={proj.researcherIDs}
+                        access={"proj.access"}>
+                    </ProjectSummary>
+                </li>                
+            );
+            return (
+                <ul>
+                    {listItems}
+                </ul>
+            );
+        }
     }
     
     render() {

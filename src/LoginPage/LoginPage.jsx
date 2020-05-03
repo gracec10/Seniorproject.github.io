@@ -48,7 +48,8 @@ class LoginPage extends Component {
 
         console.log(userData);
         this.props.loginUser(userData); 
-        // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+        // since we handle the redirect within our component, we don't need to pass 
+        // in this.props.history as a parameter
     };
 
 /*

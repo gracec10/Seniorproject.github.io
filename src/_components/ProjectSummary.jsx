@@ -20,7 +20,12 @@ class ProjectSummary extends Component {
 
     render() {
         let editBtn = <div></div>
-        if (this.props.access == "Admin") {
+        let access = "Admin";
+        if (this.props.researchers.includes(this.props.currUser)) {
+            acccess = "Researcher";
+        }   
+
+        if (access == "Admin") {
             editBtn = <button type="button" className="btn btn-primary edit-btn btn-xs">
                 Edit Project
             </button>
@@ -46,9 +51,9 @@ class ProjectSummary extends Component {
                         <div className="padding-20"></div>
                         <h4 className="question-text word-wrap">Project: {this.props.title}</h4>
                         <h5 className="word-wrap">Description: {this.props.description}</h5>
-                        <h5 className="word-wrap">Access Level: {this.props.access}</h5>
-                        <h5 className="word-wrap">Project Admins: {this.joinAdmins()}</h5>
-                        <h5 className="word-wrap">Percent Annotated: {this.props.percent}%</h5>
+                        <h5 className="word-wrap">Access Level: {access}</h5>
+                        <h5 className="word-wrap">Project Admins: {this.props.admins}</h5>
+                        <h5 className="word-wrap">Project Researchers: {this.props.researchers}</h5>
                     </div>
                     <div className="col-sm-2"></div>
                 </div>

@@ -10,9 +10,9 @@ import HomePage from '../HomePage/HomePage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import CreateProjectPage from '../CreateProjectPage/CreateProjectPage';
-import { AnnotatePage } from '../AnnotatePage/AnnotatePage';
+import AnnotatePage from '../AnnotatePage/AnnotatePage';
 import { EditProjectPage } from '../EditProjectPage';
-import { ProjectSummaryPage } from '../ProjectSummaryPage/ProjectSummaryPage'
+import ProjectSummaryPage from '../ProjectSummaryPage/ProjectSummaryPage'
 import './App.css';
 
 // Check for token to keep user logged in

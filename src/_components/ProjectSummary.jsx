@@ -38,7 +38,7 @@ class ProjectSummary extends Component {
                         <button type="button" className="btn btn-danger remove-btn btn-xs">
                             Remove Project
                         </button>
-                        <button type="button" className="btn btn-primary annotate-btn btn-xs">
+                        <button onClick={() => this.props.annotate(this.props.id)} type="button" className="btn btn-primary annotate-btn btn-xs">
                             Annotate Images
                         </button>
                         <div>{editBtn}</div>

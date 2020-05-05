@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './ProjectSummaryPage.css';
 import { ProjectSummary } from '../_components/ProjectSummary';
+import { setProjectId } from "../_actions/projectIdActions";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
 
-class ProjectSummaryPage extends React.Component {
+class ProjectSummaryPage extends Component {
     constructor(props) {
         super(props);
 
@@ -29,10 +32,16 @@ class ProjectSummaryPage extends React.Component {
                     percentFinished: 56}
             ],
         };
-
+        this.handleAnnotate = this.handleAnnotate.bind(this);
         this.displayProjects = this.displayProjects.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
     
+    }
+
+    handleAnnotate(projId) {
+        this.setState({ currUser: projId});
+        this.props.setProjectId(projId); 
+        this.props.history.push("/annotate");
     }
 
     componentDidMount() {
@@ -55,22 +64,24 @@ class ProjectSummaryPage extends React.Component {
             return <div></div>;
         }
         else {
-
             const listItems = projects.map((proj) =>
-                <li>
+               <li>
                     <ProjectSummary 
+                        id={proj._id}
                         currUser={this.state.currUser}
                         title={proj.title}
                         description={proj.description}
                         admins={proj.adminIDs}
                         researchers={proj.researcherIDs}
+                        annotate={this.handleAnnotate}
                         access={"proj.access"}>
                     </ProjectSummary>
-                </li>                
+                </li>               
             );
             return (
                 <ul>
                     {listItems}
+                    
                 </ul>
             );
         }
@@ -91,4 +102,18 @@ class ProjectSummaryPage extends React.Component {
     }
 }
 
-export { ProjectSummaryPage }; 
+
+
+ProjectSummaryPage.propTypes = {
+    setProjectId: PropTypes.func.isRequired,
+    projectIdR: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    projectIdR: state.projectIdR
+});
+
+export default connect(
+    mapStateToProps,
+    { setProjectId }
+)(ProjectSummaryPage);

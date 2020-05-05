@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './AnnotatePage.css';
-import {AnnotateQuestion} from '../_components/AnnotateQuestion';
+import { AnnotateQuestion } from '../_components/AnnotateQuestion';
+import { setProjectId } from "../_actions/projectIdActions";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import axios from 'axios';
+import jwt_decode from "jwt-decode";
 
 /*
 Answer model:
@@ -10,14 +15,17 @@ imageID
 userID
 */
 
-class AnnotatePage extends React.Component {
+class AnnotatePage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            projectId: this.props.projectIdR.projectId,
             collapsedBar: "",
             projectTitle: 'Classify the birds',
             projectDescription: 'Here you will classify the birds by species',
+            loadedQuestions: [],
+            loadedAnswers: [],
             questions: [
                 {id: 1,
                 text: "Is there a bird?", 
@@ -60,11 +68,31 @@ class AnnotatePage extends React.Component {
         this.handleAnswerSelect = this.handleAnswerSelect.bind(this);
         this.displayQuestions = this.displayQuestions.bind(this);
         this.handleWindowResize = this.handleWindowResize.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
     }
 
     componentDidMount() {
         this.handleWindowResize();
         window.addEventListener("resize", this.handleWindowResize.bind(this));
+
+
+        // Gets all of the questions for this project
+        axios.get("http://localhost:5000/api/questions/"+this.state.projectId)
+            .then(res => {
+                const questions = res.data;
+                console.log(questions.length);
+                this.setState({ loadedQuestions: questions });
+
+                const numQuestions = this.state.loadedQuestions.length;
+                let answerArr = Array(numQuestions).fill(undefined);
+                this.setState({ loadedAnswers: answerArr });
+                
+                console.log(this.state.loadedQuestions);
+                console.log(this.state.loadedAnswers);
+            })
+        
+            
+        
     }
 
     componentWillUnmount() {
@@ -172,6 +200,7 @@ class AnnotatePage extends React.Component {
                     <div className="col-sm-4 form-cont" >
                         <form name="form-horizontal" className="form-annotate">
                             <h3 className="form-title">Annotating Image #{image.id} of</h3>
+                            <h2>Hi -{this.state.projectId.toString()}-</h2>
                             <h3 className="form-title"><em>{projectTitle}</em></h3>
                             
                             <div className="display-questions">
@@ -204,4 +233,16 @@ class AnnotatePage extends React.Component {
     }
 }
 
-export { AnnotatePage }; 
+AnnotatePage.propTypes = {
+    setProjectId: PropTypes.func.isRequired,
+    projectIdR: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    projectIdR: state.projectIdR
+});
+
+export default connect(
+    mapStateToProps,
+    { setProjectId }
+)(AnnotatePage);

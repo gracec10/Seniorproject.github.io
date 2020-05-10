@@ -59,6 +59,7 @@ class ProjectSummaryPage extends Component {
     
     displayProjects() {
         const projects = this.state.testProjects;
+        console.log(projects);
         
         if (projects.length == 0) {
             return <div></div>;
@@ -74,6 +75,7 @@ class ProjectSummaryPage extends Component {
                         admins={proj.adminIDs}
                         researchers={proj.researcherIDs}
                         annotate={this.handleAnnotate}
+                        questions={proj.questionIDs}
                         access={"proj.access"}>
                     </ProjectSummary>
                 </li>               

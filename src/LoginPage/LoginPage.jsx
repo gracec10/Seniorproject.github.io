@@ -17,15 +17,16 @@ class LoginPage extends Component {
     };
 
     componentDidMount() {
-        // If logged in and user navigates to Login page, should redirect them to dashboard
+        // If logged in and user navigates to Login page, redirects to Homepage
         if (this.props.auth.isAuthenticated) {
-          this.props.history.push("/create-new-project");
+          this.props.history.push("/");
         }
       }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth.isAuthenticated) {
-            this.props.history.push("/"); // push user to homepage when they login
+            // Redirects user to Homepage on successful login
+            this.props.history.push("/");
         }
         if (nextProps.errors) {
             this.setState({
@@ -48,7 +49,7 @@ class LoginPage extends Component {
 
         console.log(userData);
         this.props.loginUser(userData); 
-        // since we handle the redirect within our component, we don't need to pass 
+        // Since we handle the redirect within our component, we don't need to pass 
         // in this.props.history as a parameter
     };
 

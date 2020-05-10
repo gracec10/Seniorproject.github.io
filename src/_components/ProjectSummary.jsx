@@ -54,6 +54,7 @@ class ProjectSummary extends Component {
                         <h5 className="word-wrap">Access Level: {access}</h5>
                         <h5 className="word-wrap">Project Admins: {this.props.admins}</h5>
                         <h5 className="word-wrap">Project Researchers: {this.props.researchers}</h5>
+                        <h5 className="word-wrap">Questions: {this.props.questions}</h5>
                     </div>
                     <div className="col-sm-2"></div>
                 </div>

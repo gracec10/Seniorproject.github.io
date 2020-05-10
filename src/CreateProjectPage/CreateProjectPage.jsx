@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import './CreateProjectPage.css';
 import { CollaboratorButton } from '../_components/CollaboratorButton';
-import {WorkflowQuestion} from '../_components/WorkflowQuestion';
-import { userService } from '../_services';
+import { WorkflowQuestion } from '../_components/WorkflowQuestion';
+import { createProject } from '../_actions/createProjectActions';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import axios from "axios";
+import { GET_ERRORS } from "../_actions/types";
+
 
 class CreateProjectPage extends Component {
     constructor(props) {
@@ -11,6 +17,7 @@ class CreateProjectPage extends Component {
         this.state = {
             projectTitle: '',
             projectDescription: '',
+            projectStoredInfo: '',
             currCollab: '',
             collaborators: [],
             newQuestionText: '',
@@ -25,20 +32,22 @@ class CreateProjectPage extends Component {
                 description: "Do you see something with wings", 
                 type:"Yes/No", 
                 categories: "",
-                required: "true" },
+                required: true },
                 {id: 2,
                 text: "Type of bird?", 
                 description: "Do you see something with wings", 
                 type:"Select Category", 
                 categories: "Eagle",
-                required: "true" }
+                required: false }
             ],
-            selectedFile: null,
+            selectedFiles: null,
             submitted: false,
             loading: false,
             error: ''
         };
 
+        this.onFileChange = this.onFileChange.bind(this);
+        this.onFileUpload = this.onFileUpload.bind(this);
         this.handleMoveQuestion = this.handleMoveQuestion.bind(this);
         this.handleAddQuestion = this.handleAddQuestion.bind(this);
         this.handleQuestionDelete = this.handleQuestionDelete.bind(this);
@@ -50,7 +59,36 @@ class CreateProjectPage extends Component {
         this.displayCollaborators = this.displayCollaborators.bind(this);
         this.displayQuestions = this.displayQuestions.bind(this);
         this.displayCategories = this.displayCategories.bind(this);
+        this.handleToggleAccess = this.handleToggleAccess.bind(this);
+        this.addImage = this.addImage.bind(this);
     }
+
+    onFileChange = event => {
+        this.setState({
+            selectedFiles: event.target.files,
+        })
+    }
+
+    onFileUpload = () => { 
+        // Create an object of formData 
+        const formData = new FormData(); 
+       
+        // Update the formData object 
+        formData.append('file', this.state.selectedFiles);
+
+        // Details of the uploaded file 
+        console.log(this.state.selectedFiles); 
+
+        /*
+        axios.post("http://localhost:8000/upload", data, { // receive two parameter endpoint url ,form data 
+        })
+            .then(res => { // then print response status
+                console.log(res.statusText)
+            })
+        }; 
+        */
+    }
+
 
     handleMoveQuestion(qId, dir){
         const questions = this.state.questions;
@@ -99,7 +137,6 @@ class CreateProjectPage extends Component {
         else {
             this.setState({ addQuestionError: true })
         }
-
     }
 
     handleQuestionDelete = qId => {
@@ -131,10 +168,39 @@ class CreateProjectPage extends Component {
         }
     }
 
+    addQuestion(projectId, question) {
+        axios
+            .post("http://localhost:5000/api/questions/"+projectId, question)
+            .then(res => { 
+                const {token}  = res.data;      
+            })
+            .catch(err =>
+                dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+                })
+            );
+    }
+
+    addImage(projectId, image) {
+        console.log("addImage");
+        axios
+            .post("http://localhost:5000/api/images/"+projectId, image)
+            .then(res => { 
+                const {token}  = res.data;      
+            })
+            .catch(err =>
+                dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+                })
+            );
+    }
+
     handleSubmit(e) {
         e.preventDefault()
         this.setState({ submitted: true });
-        const { projectTitle, projectDescription, returnUrl } = this.state;
+        const { projectTitle, projectDescription } = this.state;
 
         // stop here if form is invalid
         //maybe add more checks on minlength/maxlength of password?  email format?
@@ -142,14 +208,60 @@ class CreateProjectPage extends Component {
             return;
         }
 
-        userService.login(projectTitle, projectDescription)
-            .then(
-                user => {
-                    const { from } = this.props.location.state || { from: { pathname: "/" } };
-                    this.props.history.push(from);
-                },
-                error => this.setState({ error, loading: false })
+        const questionArray = this.state.questions.map((q) => {
+            const categories = q.categories == "" ? [] : q.categories.split(",");
+            return {
+                question: q.text,
+                description: q.description,
+                type: q.type,
+                categories: categories,
+                required: q.required
+            }
+        })
+
+        const admins = this.state.collaborators.filter((c) => {
+            return c.access == "Admin";
+        })
+        const adminArray = admins.map((a) => {
+            return a.value;
+        })
+
+        const annotators = this.state.collaborators.filter((c) => {
+            return c.access == "Annotator";
+        })
+        const annotatorArray = annotators.map((a) => {
+            return a.value;
+        })
+
+        const projectData = {
+            title: this.state.projectTitle,
+            description: this.state.projectDescription,
+            questions: questionArray,
+            admins: adminArray,
+            annotators: annotatorArray,
+            images: this.state.selectedFiles[0]
+        };
+        console.log(projectData);
+
+        axios
+            .post("http://localhost:5000/api/projects/", projectData)
+            .then(res => { // res is the returned data
+                const projectId  = res.data._id; // the id of the project just created
+
+                this.addImage(projectId, projectData.images);
+                // Add all the questions to the project
+                projectData.questions.forEach(question => {
+                    this.addQuestion(projectId, question);
+                });
+            })
+            .catch(err =>
+                dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+                })
             );
+
+        this.props.history.push("/");
     }
 
     handleAddCollab() {
@@ -233,6 +345,17 @@ class CreateProjectPage extends Component {
         return (
             <ul>{listItems}</ul>
         );
+    }
+
+    handleToggleAccess(id) {
+        const newCollaborators = this.state.collaborators.map((collab) => {
+            if (collab.id == id) {
+                collab.access = collab.access == "Admin" ? "Annotator" : "Admin";
+            }
+            return collab;
+        });
+        this.setState({collaborators: newCollaborators});
+        console.log(this.state.collaborators);
     }
     
     render() {
@@ -349,8 +472,8 @@ class CreateProjectPage extends Component {
                     </div>
                    
                     <div className="text-align-center padding-bottom-40"> 
-                        <input type="file" className='file-btn' onChange={this.onFileChange} /> 
-                        <button className='file-btn' onClick={this.onFileUpload}> 
+                        <input type="file" className='file-btn' multiple onChange={this.onFileChange} /> 
+                        <button type="button" className='file-btn' onClick={this.onFileUpload}> 
                         Upload! 
                         </button> 
                     </div> 
@@ -363,4 +486,14 @@ class CreateProjectPage extends Component {
     }
 }
 
-export default CreateProjectPage; 
+CreateProjectPage.propTypes = {
+    createProject: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+});
+
+export default connect(
+    null,
+    { createProject }
+)(CreateProjectPage);

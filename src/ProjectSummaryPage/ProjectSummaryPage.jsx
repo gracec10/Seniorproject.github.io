@@ -76,6 +76,7 @@ class ProjectSummaryPage extends Component {
                         researchers={proj.researcherIDs}
                         annotate={this.handleAnnotate}
                         questions={proj.questionIDs}
+                        images={proj.imageIDs}
                         access={"proj.access"}>
                     </ProjectSummary>
                 </li>               

@@ -40,7 +40,7 @@ class CreateProjectPage extends Component {
                 categories: "Eagle",
                 required: false }
             ],
-            selectedFiles: null,
+            selectedFiles: [],
             submitted: false,
             loading: false,
             error: ''
@@ -60,7 +60,6 @@ class CreateProjectPage extends Component {
         this.displayQuestions = this.displayQuestions.bind(this);
         this.displayCategories = this.displayCategories.bind(this);
         this.handleToggleAccess = this.handleToggleAccess.bind(this);
-        this.addImage = this.addImage.bind(this);
     }
 
     onFileChange = event => {
@@ -182,10 +181,14 @@ class CreateProjectPage extends Component {
             );
     }
 
-    addImage(projectId, image) {
-        console.log("addImage");
+    image(projectId, image) {
+        console.log(image);
+        const formData = new FormData();
+        formData.append('file', image);
+
+
         axios
-            .post("http://localhost:5000/api/images/"+projectId, image)
+            .post("http://localhost:5000/api/images/"+projectId, formData)
             .then(res => { 
                 const {token}  = res.data;      
             })
@@ -233,13 +236,16 @@ class CreateProjectPage extends Component {
             return a.value;
         })
 
+        let firstImage = this.state.selectedFiles[0];
+        
+
         const projectData = {
             title: this.state.projectTitle,
             description: this.state.projectDescription,
             questions: questionArray,
             admins: adminArray,
             annotators: annotatorArray,
-            images: this.state.selectedFiles[0]
+            images: firstImage
         };
         console.log(projectData);
 
@@ -248,11 +254,11 @@ class CreateProjectPage extends Component {
             .then(res => { // res is the returned data
                 const projectId  = res.data._id; // the id of the project just created
 
-                this.addImage(projectId, projectData.images);
                 // Add all the questions to the project
                 projectData.questions.forEach(question => {
                     this.addQuestion(projectId, question);
                 });
+                this.image(projectId, firstImage);
             })
             .catch(err =>
                 dispatch({

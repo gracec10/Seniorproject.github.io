@@ -6,7 +6,8 @@
 }
 
 textarea {
-    border: 1px solid #cccccc
+    border: 1px solid #cccccc;
+    overflow: hidden;
 }
 
 img {
@@ -31,8 +32,8 @@ img {
     margin-right: 35%;
     padding: 0px;
     border-top: 1px solid #8c8b8b;
-    margin-top: 30px;
-    margin-bottom: 10px;
+    margin-top: 0px;
+    margin-bottom: 20px;
 }
 
 .img-cont {
@@ -68,16 +69,27 @@ img {
     text-align: center;
 }
 
+.optional-note-cont {
+    display: inline-block;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    padding-bottom: 30px;
+}
+
 .optional-note-text-area {
-    width: 80%;
-    margin-left: 10%;
-    resize: vertical;
-    max-height: 120px;
+    border: 1px solid #cccccc;
     border-radius: 4px;
+    width: 60%;
+    min-width: 30px;
+    margin-left: 20%;
+    margin-right: 20%;
 }
 
 .next-btn {
+    margin-top: 30px;
     margin-bottom: 50px;
+    text-align: center;
 }
 
 .horLabel,
@@ -102,6 +114,10 @@ label {
     margin: 0px;
 }
 
+.question-list {
+    margin-top: 30px;
+}
+
 ul {
     list-style-type: none;
 }
@@ -118,6 +134,9 @@ h4 {
     font-size: 20px;
 }
 
+.optional-note-active {
+    background-color: lightblue;
+}
 
 /* All code below is for custom checkbox */
 

@@ -71,28 +71,109 @@ class AnnotatePage extends Component {
         this.handleWindowResize = this.handleWindowResize.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleAnswerYesNo = this.handleAnswerYesNo.bind(this);
+        this.setActiveQ = this.setActiveQ.bind(this);
+        this.incrementActiveQ = this.incrementActiveQ.bind(this);
     }
 
     handleKeyDown = (event) => {
+        const activeQ = this.state.activeQuestion;
+        
         switch( event.keyCode ) {
-            case 13:
-                if (this.state.activeQuestion + 1 > this.state.questions.length) {
-                    return;
+            case 40: // Down arrow key pressed
+                if (this.state.questions[activeQ-1].type == "Select Category") {
+                    document.getElementById("answer"+activeQ).focus({preventScroll: false});
                 }
+                break;
+            case 13: // Enter key pressed
+                event.preventDefault(); 
+                event.stopPropagation();
+                this.incrementActiveQ();
+                break;
 
-                const newActiveQ = this.state.activeQuestion + 1;
-                const newActiveQIdx = newActiveQ - 1;
+            case 89: // "y" key pressed
+                if (this.state.questions[activeQ - 1].type == "Yes/No") {
+                    event.preventDefault(); 
+                    event.stopPropagation();
+                    this.handleAnswerYesNo(activeQ, "Yes");
+                    this.incrementActiveQ();
+                }
+                break;
+            
+            case 83: // "s" key pressed
+                if (this.state.questions[activeQ -1].required == "false") {
+                    event.preventDefault(); 
+                    event.stopPropagation();
+                    this.handleSkipQues(activeQ);
+                    this.incrementActiveQ();
+                }
+                break;
 
-                this.setState({ activeQuestion: newActiveQ });
-                var element = document.getElementById("answer"+newActiveQ);
-                element.scrollIntoView({behavior: "smooth", block: "center"});
-                
-                if (this.state.questions[newActiveQIdx].type == "Numerical") {
-                    document.getElementById("answer"+newActiveQ).focus();
+            case 78: // "n" key pressed
+                if (this.state.questions[activeQ - 1].type == "Yes/No") {
+                    event.preventDefault(); 
+                    event.stopPropagation();
+                    this.handleAnswerYesNo(activeQ, "No");
+                    this.incrementActiveQ();
                 }
                 break;
         }
+        
+    }
 
+    incrementActiveQ() {
+        const activeQ = this.state.activeQuestion;
+        const newActiveQ = activeQ + 1;
+        const newActiveQIdx = newActiveQ - 1;
+        
+        if (activeQ > 0) {//<= this.state.questions.length) {
+            document.getElementById("answer"+activeQ).blur();
+        }        
+        else {
+            document.getElementById("optional-note").blur();
+        }
+
+        if (newActiveQ > this.state.questions.length) {
+            this.setState({ activeQuestion: 0 });//this.state.questions.length + 1 });
+            
+            var note = document.getElementById("optional-note");
+            note.focus();
+            note.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+        else {
+            this.setState({ activeQuestion: newActiveQ });
+
+            if (this.state.questions[newActiveQIdx].type == "Numerical"){
+                document.getElementById("answer"+newActiveQ).focus();
+            }
+        
+            var element = document.getElementById("answer"+newActiveQ);
+            element.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+    }
+
+    setActiveQ(qId) {
+        const oldActiveQ = this.state.activeQuestion;
+
+        if (oldActiveQ > 0) document.getElementById("answer"+oldActiveQ).blur();
+        else document.getElementById("optional-note").blur();
+
+        this.setState({ activeQuestion: qId });
+
+        if (qId >= 1) {
+            if (this.state.questions[qId-1].type == "Numerical"){
+                document.getElementById("answer"+qId).focus();
+            }       
+            var element = document.getElementById("answer"+qId);
+            element.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+        else if (qId == 0) {
+            var note = document.getElementById("optional-note");
+            note.focus();
+            note.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+
+        
     }
 
     componentDidMount() {
@@ -125,7 +206,7 @@ class AnnotatePage extends Component {
                 
 
                 const numQuestions = this.state.questions.length;
-                let answerArr = Array(numQuestions).fill(undefined);
+                let answerArr = Array(numQuestions).fill("");
                 this.setState({ answers: answerArr });
                 
                 console.log("questions");
@@ -160,6 +241,19 @@ class AnnotatePage extends Component {
         this.setState({ [name]: value });
     }
 
+    handleAnswerYesNo(qId, value){
+        const newAnsArr = this.state.answers.map((item, idx) => {
+            if (idx == qId - 1) {
+                return value;
+            }
+            else {
+                return item;
+            }
+        });
+        
+        this.setState({answers: newAnsArr}); 
+    }
+
     handleAnswerSelect(qId){
         const e = document.getElementById("answer"+qId);
         const newQType = e.options[e.selectedIndex].value;
@@ -178,6 +272,7 @@ class AnnotatePage extends Component {
     handleAnswerNum(qId){
         const e = document.getElementById("answer"+qId);
         const newQType = e.value;
+
         if (!isNaN(newQType) || 
             (newQType[0] == "-" && !isNaN(newQType.substring(1)) 
             || newQType=="-" || newQType=="." || newQType=="-.")) {
@@ -189,8 +284,11 @@ class AnnotatePage extends Component {
                     return item;
                 }
             });
-            
             this.setState({answers: newAnsArr}); 
+        }
+        else {
+            this.setState({projectTitle: newQType});
+            this.setState({answers: this.state.answers});
         }         
     }
 
@@ -219,8 +317,11 @@ class AnnotatePage extends Component {
                     categories={question.categories}
                     required={question.required}
                     onSelect={this.handleAnswerSelect}
+                    onYesNo={this.handleAnswerYesNo}
                     onChangeNum = {this.handleAnswerNum}
                     onSkip = {this.handleSkipQues}
+                    onSetActive = {this.setActiveQ}
+                    isActiveQ = {question.id == this.state.activeQuestion}
                 />
             </li>                
         );
@@ -236,6 +337,10 @@ class AnnotatePage extends Component {
             <div className="error-cont">
                 <h3>Screen too small to display image.</h3>
             </div>
+
+        const optionalNoteStyle = 
+            (this.state.activeQuestion == 0) ? //== this.state.questions.length + 1) ?
+            "optional-note-active" : "";
         
         if (window.innerWidth > 767) {
             returnVal = 
@@ -250,13 +355,16 @@ class AnnotatePage extends Component {
                             
                             <div className="display-questions">
                                 {this.displayQuestions()}
-                                <div className="annotate-divider"></div>
-                                <div className="optionalNote">
-                                    <h4>Optional Note</h4>
-                                    <label htmlFor="projectDescription">Enter any other important information.</label>
+                                
+                                <div className={"optional-note-cont "+optionalNoteStyle} onClick={() => this.setActiveQ(0)}>
+                                    <div className="annotate-divider"></div>
+                                    <div className="optionalNote">
+                                        <h4>Optional Note</h4>
+                                        <label htmlFor="projectDescription">Enter any other important information.</label>
+                                    </div>
+                                    <textarea type="textarea" className="optional-note-text-area" name="optionalNote" 
+                                        id="optional-note" rows="1" value={this.state.optionalNote} onChange={this.handleChange} />
                                 </div>
-                                <textarea type="textarea" className="optional-note-text-area"  name="optionalNote" 
-                                    value={this.state.optionalNote} onChange={this.handleChange} />
                             </div> 
 
                             <div className="form-group next-btn">

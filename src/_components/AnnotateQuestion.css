@@ -5,20 +5,19 @@
     margin-right: 35%;
     padding: 0px;
     border-top: 1px solid #8c8b8b;
-    margin-top: 30px;
-    margin-bottom: 10px;
+    margin-top: 0px;
+    margin-bottom: 20px;
 }
-
-.selected-btn {
-  background-color: darkgray;
-}
-
 
 .skip {
     margin-top: 20px;
     width: 100%;
     align-items: center;
     text-align: center;
+}
+
+.question-bottom {
+  padding-bottom: 30px;
 }
 
 .container-ch-outer {
@@ -34,20 +33,67 @@
     text-align: center;
 }
 
+
+.yes-no-btn {
+  width: 50%;
+  height: 30px;
+  font-size: 17px;
+  border-radius: 4px;
+  background-color:#c6c6c6;
+  border: 1px #a3a3a3 solid;
+  display: inline-block;
+}
+
+.yes-no-btn:hover {
+  background-color: #b6b6b6;
+  border-color: #A3A3A3;
+}
+
+.annotate-option {
+  position: relative;
+}
+
+.annotate-select {
+  position: relative;
+}
+
+.pos-relative {
+  position: relative;
+}
+
+.selected-btn {
+  background-color: #66ADEA;
+  border-color: #4D94D1;
+}
+
+.selected-btn:hover {
+  background-color: #4D94D1;
+  border-color: #337ab7;
+}
+
 .annotate-input {
   border-radius: 4px;
 }
 
 .question-container {
-    width: 100%;
-    padding: 0px;
+  width: 100%;
+  padding: 0px;
+}
+
+select:focus {
+  min-height: 30px;
 }
 
 .num-entry {
-    width: 40%;
-    min-width: 30px;
-    margin-left: 30%;
-    margin-right: 30%;
+  width: 40%;
+  min-width: 30px;
+  margin-left: 30%;
+  margin-right: 30%;
+  height: 30px;
+}
+
+.active-question {
+  background-color: lightblue;
 }
 
 /* All code below is for custom checkbox */

@@ -9,6 +9,10 @@
     margin-bottom: 10px;
 }
 
+.selected-btn {
+  background-color: darkgray;
+}
+
 
 .skip {
     margin-top: 20px;

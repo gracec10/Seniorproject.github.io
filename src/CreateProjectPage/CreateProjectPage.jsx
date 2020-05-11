@@ -258,7 +258,7 @@ class CreateProjectPage extends Component {
                 projectData.questions.forEach(question => {
                     this.addQuestion(projectId, question);
                 });
-                this.image(projectId, firstImage);
+                //this.image(projectId, firstImage);
             })
             .catch(err =>
                 dispatch({

@@ -13,6 +13,7 @@ class AnnotateQuestion extends Component {
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>
+                <p>{this.props.value}</p>
             </div>
         }
         else if (this.props.type == "Numerical"){
@@ -23,7 +24,7 @@ class AnnotateQuestion extends Component {
             </div>
         }
         else if (this.props.type == "Select Category") {
-            let categories = this.props.categories.split(',').map((cat) =>
+            let categories = this.props.categories.map((cat) =>
                 <option value={cat}>{cat}</option>
             );
             answer = <div>

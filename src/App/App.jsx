@@ -11,7 +11,7 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import CreateProjectPage from '../CreateProjectPage/CreateProjectPage';
 import AnnotatePage from '../AnnotatePage/AnnotatePage';
-import { EditProjectPage } from '../EditProjectPage';
+import EditProjectPage from '../EditProjectPage/EditProjectPage';
 import ProjectSummaryPage from '../ProjectSummaryPage/ProjectSummaryPage'
 import './App.css';
 

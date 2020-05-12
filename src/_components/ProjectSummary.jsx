@@ -19,28 +19,43 @@ class ProjectSummary extends Component {
     }
 
     render() {
-        let editBtn = <div></div>
-        let access = "Admin";
-        if (this.props.researchers.includes(this.props.currUser)) {
-            acccess = "Researcher";
-        }   
+        const access = this.props.researchers.includes(this.props.currUser) ?
+            "Researcher" : "Admin";
 
-        if (access == "Admin") {
-            editBtn = <button type="button" className="btn btn-primary edit-btn btn-xs">
+        // Only admins have access to edit projects
+        const editBtn = (access == "Admin") ?
+            <button 
+                onClick={() => this.props.edit(this.props.id)}
+                type="button" 
+                className="btn btn-primary edit-btn btn-xs">
                 Edit Project
-            </button>
-        }
+            </button> :
+            <div></div>;
+        
+        // Only admins have access to delete projects
+        const deleteBtn = (access == "Admin") ?
+            <button 
+                onClick={() => this.props.delete(this.props.id)}
+                type="button" 
+                className="btn btn-danger remove-btn btn-xs">
+                Delete Project
+            </button> :
+            <div></div>;
+
+        const annotateBtn = <button 
+            onClick={() => this.props.annotate(this.props.id)} 
+            type="button" 
+            className="btn btn-primary annotate-btn btn-xs">
+            Annotate Images
+        </button>;
+
         return (
             <div className="row proj">
                 <div>
                     <div className="col-sm-2"> </div>   
                     <div className="col-sm-8">
-                        <button type="button" className="btn btn-danger remove-btn btn-xs">
-                            Remove Project
-                        </button>
-                        <button onClick={() => this.props.annotate(this.props.id)} type="button" className="btn btn-primary annotate-btn btn-xs">
-                            Annotate Images
-                        </button>
+                        <div>{deleteBtn}</div>
+                        <div>{annotateBtn}</div>
                         <div>{editBtn}</div>
                     </div>
                     <div className="col-sm-2"> </div>   
@@ -59,7 +74,6 @@ class ProjectSummary extends Component {
                     </div>
                     <div className="col-sm-2"></div>
                 </div>
-                
             </div>
         )
     }

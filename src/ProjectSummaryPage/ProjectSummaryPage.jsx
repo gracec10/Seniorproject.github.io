@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './ProjectSummaryPage.css';
 import { ProjectSummary } from '../_components/ProjectSummary';
-import { setProjectId } from "../_actions/projectIdActions";
+import { setProjectId, deleteProject } from "../_actions/projectIdActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from 'axios';
@@ -12,9 +12,9 @@ class ProjectSummaryPage extends Component {
         super(props);
 
         this.state = {
-            testProjects: [],
-            currUser: "", //the id of the logged in user
-            projects: [
+            loadedProjects: [],
+            currUser: "", // The id of the logged in user
+            testProjects: [
                 { projectTitle: "Project 1 Title", 
                     projectDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a nulla venenatis, pharetra ex et, ultrices purus. Curabitur nec tincidunt mi. Nulla sodales felis at erat pulvinar scelerisque. Integer bibendum malesuada tincidunt. Donec placerat sem feugiat, fringilla mauris ut, pellentesque magna. ", 
                     access: "Admin",
@@ -32,25 +32,47 @@ class ProjectSummaryPage extends Component {
                     percentFinished: 56}
             ],
         };
+        this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
         this.handleAnnotate = this.handleAnnotate.bind(this);
         this.displayProjects = this.displayProjects.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
-    
     }
 
-    handleAnnotate(projId) {
-        this.setState({ currUser: projId});
-        this.props.setProjectId(projId); 
+    // Open edit project page for clicked project
+    handleEdit(projectId) {
+        this.props.setProjectId(projectId); 
+        this.props.history.push("/edit-project");
+    }
+
+    // Delete project
+    handleDelete(projectId) {
+        // Deletes the project from database
+        this.props.deleteProject(projectId); 
+
+        // Removes project from state
+        const newProjects = this.state.loadedProjects.filter((p) => {
+            return p._id != projectId;
+        });
+        this.setState({ loadedProjects: newProjects });
+    }
+
+    // Open annotation page for clicked project
+    handleAnnotate(projectId) {
+        this.props.setProjectId(projectId); 
         this.props.history.push("/annotate");
     }
 
+    // Load projects and current user
     componentDidMount() {
         // Gets all of the projects that the current user has access to
         axios.get('http://localhost:5000/api/projects/')
             .then(res => {
                 const userProjects = res.data;
-                this.setState({ testProjects: userProjects });
+                this.setState({ loadedProjects: userProjects });
             })
+
+        // Gets current user and saves to state
         let tok = localStorage.getItem('jwtToken');
         console.log(tok);
         let decoded = jwt_decode(tok);
@@ -58,12 +80,9 @@ class ProjectSummaryPage extends Component {
     }
     
     displayProjects() {
-        const projects = this.state.testProjects;
-        console.log(projects);
-        
-        if (projects.length == 0) {
-            return <div></div>;
-        }
+        const projects = this.state.loadedProjects;
+
+        if (projects.length == 0) return <div></div>;
         else {
             const listItems = projects.map((proj) =>
                <li>
@@ -74,7 +93,9 @@ class ProjectSummaryPage extends Component {
                         description={proj.description}
                         admins={proj.adminIDs}
                         researchers={proj.researcherIDs}
+                        edit={this.handleEdit}
                         annotate={this.handleAnnotate}
+                        delete={this.handleDelete}
                         questions={proj.questionIDs}
                         images={proj.imageIDs}
                         access={"proj.access"}>
@@ -84,7 +105,6 @@ class ProjectSummaryPage extends Component {
             return (
                 <ul>
                     {listItems}
-                    
                 </ul>
             );
         }
@@ -105,10 +125,9 @@ class ProjectSummaryPage extends Component {
     }
 }
 
-
-
 ProjectSummaryPage.propTypes = {
     setProjectId: PropTypes.func.isRequired,
+    deleteProject: PropTypes.func.isRequired,
     projectIdR: PropTypes.object.isRequired
 };
 
@@ -118,5 +137,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { setProjectId }
+    { setProjectId, deleteProject }
 )(ProjectSummaryPage);

@@ -1,48 +1,42 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './EditProjectPage.css';
-import {CollaboratorButton} from '../_components/CollaboratorButton';
-import {WorkflowQuestion} from '../_components/WorkflowQuestion';
+import { CollaboratorButton } from '../_components/CollaboratorButton';
+import { WorkflowQuestion } from '../_components/WorkflowQuestion';
+import { setProjectId } from "../_actions/projectIdActions";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import axios from 'axios';
 
 import { userService } from '../_services';
 
-class EditProjectPage extends React.Component {
+class EditProjectPage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            projectTitle: 'Classify the birds',
-            projectDescription: 'In this project you will classify bird types.',
+            projectId: this.props.projectIdR.projectId,
+            projectTitle: 'Project Title',
+            projectDescription: 'Project Description',
+            questions: [],
+            collaborators: [],
+
+
             currCollab: '',
-            collaborators: [
-                { id: 1, value: "test1@gmail.com", access: "Admin"},
-                { id: 2, value: "test2@gmail.com", access: "Admin"},
-                { id: 3, value: "test3@gmail.com", access: "Admin"}
-            ],
+            
             newQuestionText: '',
             newQuestionDescription: '',
             newQuestionType: 'Yes/No',
             newQuestionCategories: "",
             newQuestionRequired: true,
             addQuestionError: false,
-            questions: [
-                {id: 1,
-                text: "Is there a bird?", 
-                description: "Do you see something with wings", 
-                type:"Yes/No", 
-                categories: "",
-                required: "true" },
-                {id: 2,
-                text: "Type of bird?", 
-                description: "Do you see something with wings", 
-                type:"Select Category", 
-                categories: "Eagle",
-                required: "true" }
-            ],
+            
             selectedFile: null,
             submitted: false,
             loading: false,
             error: ''
         };
+
+        this.componentDidMount = this.componentDidMount.bind(this);
 
         this.handleMoveQuestion = this.handleMoveQuestion.bind(this);
         this.handleAddQuestion = this.handleAddQuestion.bind(this);
@@ -54,6 +48,49 @@ class EditProjectPage extends React.Component {
         this.displayCollaborators = this.displayCollaborators.bind(this);
         this.displayQuestions = this.displayQuestions.bind(this);
         this.displayCategories = this.displayCategories.bind(this);
+    }
+
+    componentDidMount() {
+        // Gets the project and saves the title and description to state
+        axios.get("http://localhost:5000/api/projects/"+this.state.projectId)
+            .then(res => {
+                this.setState({ projectTitle: res.data.title });
+                this.setState({ projectDescription: res.data.description });
+
+                const numAdmin = res.data.adminIDs.length;
+                const admins = res.data.adminIDs.map((admin, idx) => {
+                    return {
+                        id: idx+1,
+                        value: admin,
+                        access: "Admin"
+                    };
+                });
+                const researchers = res.data.researcherIDs.map((researcher, idx) => {
+                    return {
+                        id: idx+1+numAdmin,
+                        value: researcher,
+                        access: "Annotator"
+                    };
+                });
+                
+                const collaborators = admins.concat(researchers);
+                this.setState({ collaborators: collaborators });               
+            })
+        // Gets all of the questions for this project and create answer array
+        axios.get("http://localhost:5000/api/questions/"+this.state.projectId)
+            .then(res => {
+                const questions = res.data.map((question, idx) => {
+                    return {
+                        id: idx+1,
+                        text: question.content,
+                        description: question.description,
+                        type: question.type,
+                        required: question.required.toString(),
+                        categories: question.categories
+                    }
+                })
+                this.setState({ questions: questions });
+            })        
     }
 
     onFileChange = event => {
@@ -409,4 +446,17 @@ class EditProjectPage extends React.Component {
     }
 }
 
-export { EditProjectPage }; 
+
+EditProjectPage.propTypes = {
+    setProjectId: PropTypes.func.isRequired,
+    projectIdR: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    projectIdR: state.projectIdR
+});
+
+export default connect(
+    mapStateToProps,
+    { setProjectId }
+)(EditProjectPage);

@@ -5,8 +5,6 @@ import { setProjectId } from "../_actions/projectIdActions";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import axios from 'axios';
-import jwt_decode from "jwt-decode";
-import ScrollTo from "react-scroll-into-view";
 
 /*
 Answer model:

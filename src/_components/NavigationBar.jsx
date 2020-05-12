@@ -63,8 +63,6 @@ class NavigationBar extends React.Component {
                             <li><a href="/">Home</a></li>
                             <li><a href="/create-new-project">Create New Project</a></li>
                             <li><a href="/projects">Project Summary</a></li>
-                            <li><a href="/annotate">Annotate</a></li>
-                            <li><a href="/edit-project">Edit Project</a></li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
                             <li>

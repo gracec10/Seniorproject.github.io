@@ -179,21 +179,18 @@ class CreateProjectPage extends Component {
             );        
     }
 
-    image(projectId, images) {
-               
+    addImages(projectId, images) {
         const config = {
-            headers: {
+            headers: { 
                 'content-type': 'multipart/form-data'
             }
         };
-
         for (const file of images) {
             let formData = new FormData();
             formData.append("myFiles", file);
             axios
                 .post("http://localhost:5000/api/images/"+projectId, formData, config)
                 .then(res => { 
-                    //const {token}  = res.data;      
                 })
                 .catch(err =>
                     dispatch({
@@ -241,8 +238,6 @@ class CreateProjectPage extends Component {
             return a.value;
         })
 
-        let firstImage = this.state.selectedFiles[0];
-
         const projectData = {
             title: this.state.projectTitle,
             description: this.state.projectDescription,
@@ -271,7 +266,7 @@ class CreateProjectPage extends Component {
                 projectData.annotators.forEach(ann => {
                     this.addCollaborators(ann, projectId, "Annotator");
                 });
-                this.image(projectId, projectData.images);
+                this.addImages(projectId, projectData.images);
             })
             .catch(err =>
                 dispatch({

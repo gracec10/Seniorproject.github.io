@@ -19,6 +19,7 @@ class EditProjectPage extends Component {
             projectDescription: 'Project Description',
             questions: [],
             collaborators: [],
+            images: [],
 
             currCollab: '',
             newQuestionText: '',
@@ -72,6 +73,14 @@ class EditProjectPage extends Component {
         });
     }
 
+    getImages() {
+        axios.get("http://localhost:5000/api/images/"+this.state.projectId)
+            .then(res => {
+                console.log(res.data);
+                this.setState({ images: res.data });
+            });
+    }
+
     componentDidMount() {
         // Gets the project and saves the title and description to state
         axios.get("http://localhost:5000/api/projects/"+this.state.projectId)
@@ -97,7 +106,8 @@ class EditProjectPage extends Component {
                 
                 const collaborators = admins.concat(researchers);
                 this.setState({ collaborators: collaborators });    
-                this.getCollaboratorEmails(collaborators);           
+                this.getCollaboratorEmails(collaborators);     
+                this.getImages();      
             })
         // Gets all of the questions for this project and create answer array
         axios.get("http://localhost:5000/api/questions/"+this.state.projectId)
@@ -119,26 +129,6 @@ class EditProjectPage extends Component {
     onFileChange = event => {
         this.setState({ selectedFile: event.target.files[0] }); 
     }
-
-    onFileUpload = () => { 
-     
-        // Create an object of formData 
-        const formData = new FormData(); 
-       
-        // Update the formData object 
-        formData.append( 
-          "myFile", 
-          this.state.selectedFile, 
-          this.state.selectedFile.name 
-        ); 
-       
-        // Details of the uploaded file 
-        console.log(this.state.selectedFile); 
-       
-        // Request made to the backend api 
-        // Send formData object 
-        //axios.post("api/uploadfile", formData); 
-      }; 
     
     handleAddQuestion() {
         let categories = "";
@@ -272,6 +262,22 @@ class EditProjectPage extends Component {
                 })
             );        
     }
+    addImages(projectId, images) {
+        console.log(images);
+        for (const file of images) {
+            console.log("adding file--"+file._id+" project id--"+projectId);
+            const imageData = {id: file._id, projectId: projectId};
+            axios
+                .post("http://localhost:5000/api/images/edit", imageData)
+                .catch(err =>
+                    dispatch({
+                    type: GET_ERRORS,
+                    payload: err.response.data
+                    })
+            );
+        }
+        
+    }
 
     handleSubmit(e) {
         e.preventDefault()
@@ -310,16 +316,13 @@ class EditProjectPage extends Component {
             return a.value;
         })
 
-        //let firstImage = this.state.selectedFiles[0];
-        
-
         const projectData = {
             title: this.state.projectTitle,
             description: this.state.projectDescription,
             questions: questionArray,
             admins: adminArray,
             annotators: annotatorArray,
-            images: null//firstImage
+            images: this.state.images
         };
 
 
@@ -344,7 +347,7 @@ class EditProjectPage extends Component {
                 projectData.annotators.forEach(ann => {
                     this.addCollaborators(ann, projectId, "Annotator");
                 });
-                //this.image(projectId, firstImage);
+                this.addImages(projectId, projectData.images);
             })
             .catch(err =>
                 dispatch({
@@ -446,7 +449,7 @@ class EditProjectPage extends Component {
         return (
             <div className="col-sm-10 col-sm-offset-1 page-outer-cont">
                 <div className="row form-row">
-                    <h2 className="col-sm-12 createProjectTitle">Edit Project</h2>
+                    <h2 className="col-sm-12 createProjectTitle">Edit Project {this.state.projectId}</h2>
                 </div>
                 <div className="row section-heading">
                     <h3>Project Overview Information</h3>
@@ -538,6 +541,7 @@ class EditProjectPage extends Component {
                     <div className={"question-display"}>
                         {this.displayQuestions()}
                     </div> 
+                    {/*
                     <div className="row section-heading">
                         <div className="divider"></div>
                         <h3>Upload Project Images</h3>
@@ -548,10 +552,7 @@ class EditProjectPage extends Component {
                    
                     <div className="text-align-center padding-bottom-40"> 
                         <input type="file" className='file-btn' multiple onChange={this.onFileChange} /> 
-                        <button type="button" className='file-btn' onClick={this.onFileUpload}> 
-                        Upload! 
-                        </button> 
-                    </div> 
+                    </div>*/}
                     <div className="form-group submit padding-bottom-20">
                         <button className="btn btn-primary" disabled={loading} >Update Project</button>
                     </div>

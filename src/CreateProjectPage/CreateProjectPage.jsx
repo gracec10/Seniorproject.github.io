@@ -48,7 +48,6 @@ class CreateProjectPage extends Component {
 
         this.addCollaborators = this.addCollaborators.bind(this);
         this.onFileChange = this.onFileChange.bind(this);
-        this.onFileUpload = this.onFileUpload.bind(this);
         this.handleMoveQuestion = this.handleMoveQuestion.bind(this);
         this.handleAddQuestion = this.handleAddQuestion.bind(this);
         this.handleQuestionDelete = this.handleQuestionDelete.bind(this);
@@ -68,27 +67,6 @@ class CreateProjectPage extends Component {
             selectedFiles: event.target.files,
         })
     }
-
-    onFileUpload = () => { 
-        // Create an object of formData 
-        const formData = new FormData(); 
-       
-        // Update the formData object 
-        formData.append('file', this.state.selectedFiles);
-
-        // Details of the uploaded file 
-        console.log(this.state.selectedFiles); 
-
-        /*
-        axios.post("http://localhost:8000/upload", data, { // receive two parameter endpoint url ,form data 
-        })
-            .then(res => { // then print response status
-                console.log(res.statusText)
-            })
-        }; 
-        */
-    }
-
 
     handleMoveQuestion(qId, dir){
         const questions = this.state.questions;
@@ -203,29 +181,28 @@ class CreateProjectPage extends Component {
 
     image(projectId, images) {
                
-        let formData = new FormData();
-
-        for (const file of images) {
-            formData.append("myFiles", file);
-        }
-
-       
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios
-            .post("http://localhost:5000/api/images/"+projectId, formData, config)
-            .then(res => { 
-                //const {token}  = res.data;      
-            })
-            .catch(err =>
-                dispatch({
-                type: GET_ERRORS,
-                payload: err.response.data
+
+        for (const file of images) {
+            let formData = new FormData();
+            formData.append("myFiles", file);
+            axios
+                .post("http://localhost:5000/api/images/"+projectId, formData, config)
+                .then(res => { 
+                    //const {token}  = res.data;      
                 })
+                .catch(err =>
+                    dispatch({
+                    type: GET_ERRORS,
+                    payload: err.response.data
+                    })
             );
+        }
+        
     }
 
     handleSubmit(e) {
@@ -515,9 +492,6 @@ class CreateProjectPage extends Component {
                    
                     <div className="text-align-center padding-bottom-40"> 
                         <input type="file" name="myFiles" className='file-btn' multiple onChange={this.onFileChange} /> 
-                        <button type="button" className='file-btn' onClick={this.onFileUpload}> 
-                        Upload! 
-                        </button> 
                     </div> 
                     <div className="form-group submit padding-bottom-20">
                         <button className="btn btn-primary" disabled={loading} >Create Project</button>

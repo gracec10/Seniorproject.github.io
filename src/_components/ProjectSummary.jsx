@@ -68,8 +68,8 @@ class ProjectSummary extends Component {
                         <h5 className="word-wrap">Description: {this.props.description}</h5>
                         <h5 className="word-wrap">Access Level: {access}</h5>
                         
-                        <h5 className="word-wrap">Questions: {this.props.questions}</h5>
-                        <h5 className="word-wrap">Images: {this.props.images}</h5>
+                        <h5 className="word-wrap">Questions: {this.props.questions.join(", ")}</h5>
+                        <h5 className="word-wrap">Images: {this.props.images.join(", ")}</h5>
                     </div>
                     <div className="col-sm-2"></div>
                 </div>

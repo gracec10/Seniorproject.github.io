@@ -104,7 +104,6 @@ class ProjectSummaryPage extends Component {
                         images={proj.imageIDs}
                         access={"proj.access"}>
                     </ProjectSummary>
-                    <h3>Image ids: {proj.imageIDs}</h3>
                 </li>        
                   
             );

@@ -489,7 +489,7 @@ class CreateProjectPage extends Component {
                         <input type="file" name="myFiles" className='file-btn' multiple onChange={this.onFileChange} /> 
                     </div> 
                     <div className="form-group submit padding-bottom-20">
-                        <button className="btn btn-primary" disabled={loading} >Create Project</button>
+                        <button className="btn btn-primary">Create Project</button>
                     </div>
                 </form>
             </div>

@@ -61,6 +61,7 @@ class ProjectSummaryPage extends Component {
     handleAnnotate(projectId) {
         this.props.setProjectId(projectId); 
         this.props.history.push("/annotate");
+
     }
 
 

@@ -23,40 +23,12 @@ class AnnotatePage extends Component {
             collapsedBar: "",
             projectTitle: 'Project Title',
             projectDescription: 'Project Description',
+            isFullyAnnotated: false,
             loadedProject: {},
             questions: [],
             answers: [],
-            images: [],
-            tempQuestions: [
-                {id: 1,
-                text: "Is there a bird?", 
-                description: "Do you see something with wings", 
-                type:"Yes/No", 
-                categories: "",
-                required: "true" },
-                {id: 2,
-                text: "Type of bird?", 
-                description: "Look at the wings, beak, etc.", 
-                type:"Select Category", 
-                categories: "Eagle,Crow,Hawk",
-                required: "false" },
-                {id: 3,
-                text: "How many birds?", 
-                description: "Count the birds", 
-                type:"Numerical", 
-                categories: "Eagle,Crow,Hawk",
-                required: "false" },
-                {id: 4,
-                text: "How many birds?", 
-                description: "Count the birds", 
-                type:"Numerical", 
-                categories: "Eagle,Crow,Hawk",
-                required: "false" }
-            ],
-            image: {
-                id: 1,
-                src: ""
-            },
+            loadedImage: undefined,
+            imgNum: 0, // Number of current image in project
             optionalNote: "",
             activeQuestion: 1,
             submitted: false,
@@ -74,12 +46,19 @@ class AnnotatePage extends Component {
         this.handleAnswerYesNo = this.handleAnswerYesNo.bind(this);
         this.setActiveQ = this.setActiveQ.bind(this);
         this.incrementActiveQ = this.incrementActiveQ.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.resetState = this.resetState.bind(this);
     }
 
     handleKeyDown = (event) => {
         const activeQ = this.state.activeQuestion;
         
         switch( event.keyCode ) {
+            case 39: //Right arrow key pressed
+                if (this.state.activeQuestion > 0){
+                    this.handleSubmit(event);
+                }
+                break;
             case 40: // Down arrow key pressed
                 if (this.state.questions[activeQ-1].type == "Select Category") {
                     document.getElementById("answer"+activeQ).focus({preventScroll: false});
@@ -174,9 +153,62 @@ class AnnotatePage extends Component {
         }
     }
 
+    resetState() {
+        // Get all of the images
+        axios.get("http://localhost:5000/api/images/"+this.state.projectId)
+            .then(res => {
+                console.log("Image data");
+                console.log(res.data);    
+
+                // Find first image with no answers -- this is the image
+                // we want to annotate
+                let foundImage = false;
+                let imgNum = 1;
+                res.data.forEach(image => {
+                    console.log("image: "+image);
+                    if ((image.answers.length == 0) && (foundImage == false)) {
+                        this.setState({ loadedImage: image }); 
+                        this.setState({ imgNum: imgNum });
+                        foundImage = true;
+                    }
+                    else if (foundImage == false ) imgNum = imgNum + 1;
+                });   
+                if (imgNum == res.data.length + 1) {
+                    this.setState({ isFullyAnnotated: true});
+                }
+
+            })
+
+        // Gets all of the questions for this project and create answer array
+        axios.get("http://localhost:5000/api/questions/"+this.state.projectId)
+            .then(res => {
+                const questions = res.data.map((question, idx) => {
+                    return {
+                        _id: question._id,
+                        id: idx+1,
+                        text: question.content,
+                        description: question.description,
+                        type: question.type,
+                        required: question.required.toString(),
+                        categories: question.categories
+                    }
+                })
+                this.setState({ questions: questions });
+
+                const numQuestions = this.state.questions.length;
+                let answerArr = Array(numQuestions).fill("");
+                this.setState({ answers: answerArr });
+                this.setState({ activeQuestion: 1 });
+                var element = document.getElementById("answer1");
+                element.scrollIntoView({behavior: "smooth", block: "center"}); 
+            })     
+    }
+
     componentDidMount() {
         this.handleWindowResize();
         window.addEventListener("resize", this.handleWindowResize.bind(this));
+        window.addEventListener("keydown", this.handleKeyDown);
+
 
         // Gets the project and saves the title and description to state
         axios.get("http://localhost:5000/api/projects/"+this.state.projectId)
@@ -188,49 +220,13 @@ class AnnotatePage extends Component {
                 this.setState({ loadedProject: res.data });
             })
 
-        // Get all of the images
-        axios.get("http://localhost:5000/api/images/"+this.state.projectId)
-            .then(res => {
-                console.log("Image data");
-                console.log(res.data);    
-                this.setState({ images: res.data });            
-            })
-
-        // Gets all of the questions for this project and create answer array
-        axios.get("http://localhost:5000/api/questions/"+this.state.projectId)
-            .then(res => {
-                const questions = res.data.map((question, idx) => {
-                    return {
-                        id: idx+1,
-                        text: question.content,
-                        description: question.description,
-                        type: question.type,
-                        required: question.required.toString(),
-                        categories: question.categories
-                    }
-                })
-                this.setState({ questions: questions });
-                
-
-                const numQuestions = this.state.questions.length;
-                let answerArr = Array(numQuestions).fill("");
-                this.setState({ answers: answerArr });
-                
-                console.log("questions");
-                console.log(this.state.questions);
-                console.log("answers");
-                console.log(this.state.answers);
-
-                var element = document.getElementById("answer1");
-                element.scrollIntoView({behavior: "smooth", block: "center"}); 
-
-                window.addEventListener("keydown", this.handleKeyDown);
-            })            
+        this.resetState();            
     }
 
     componentWillUnmount() {
         window.removeEventListener("resize", this.handleWindowResize.bind(this));
         window.removeEventListener("keydown", this.handleKeyDown);
+
     }
     
 
@@ -336,6 +332,56 @@ class AnnotatePage extends Component {
             <ul className="question-list">{listItems}</ul>
         );
     }
+/*
+//POST (uses project, question, image, user)
+router.post('/:projectID/:imageID/:questionID', (req, res) => {
+    User.findById(jwtDecode(req.headers.authorization).id).then(founduser => {
+        Project.findById(req.params.projectId).then(foundproject => {
+            Image.findById(req.params.imageID).then(foundimage => {
+                Question.findById(req.params.questionID).then(foundquestion => {
+                    Answer.create({
+                        content: req.body.content,
+*/
+    handleSubmit(e) {
+        e.preventDefault();
+        console.log("SUBMIT");
+
+        const projectId = this.state.projectId.toString();
+        const imageId = this.state.loadedImage._id.toString();
+
+        let idx = 0;
+        this.state.answers.forEach(answer => {
+            
+            const questionId = this.state.questions[idx]._id.toString();
+            const ansData = {
+                content: answer,
+                imageId: imageId,
+                questionId: questionId,
+                projectId: projectId
+            };
+
+            axios
+            .post("http://localhost:5000/api/answers/answer", ansData)
+            .then(_ => {
+                console.log("HELLO");
+                idx = idx + 1;
+                console.log("idx--"+idx+"  ans length--"+this.state.answers.length);
+                if (idx == this.state.answers.length) {
+                    console.log("RESET");
+                    this.resetState();
+                }
+            })
+            .catch(err => 
+                dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+                })
+            );
+            console.log(idx);
+            
+        });
+        
+    }
     
     render() {
         const { projectTitle, image, loading, error } = this.state;
@@ -350,10 +396,9 @@ class AnnotatePage extends Component {
             "optional-note-active" : "";
         
         let path="http://localhost:5000/black";
-        if (this.state.images.length > 0)  path = "http://localhost:5000/"+this.state.images[0].name;
-        console.log("Path--"+path);
+        if (this.state.loadedImage != undefined) path = "http://localhost:5000/"+this.state.loadedImage.name;
 
-        if (window.innerWidth > 767) {
+        if (window.innerWidth > 767 && (this.state.isFullyAnnotated == false)) {
             returnVal = 
                 <div className="annotate-cont">
                     <div className="col-sm-8 img-cont" >
@@ -361,8 +406,8 @@ class AnnotatePage extends Component {
                     </div>
                     <div className="col-sm-4 form-cont" >
                         <form name="form-horizontal" className="form-annotate">
-                            <h3 className="form-title">Annotating Image #{image.id} of</h3>
-                            <h3 className="form-title"><em>{projectTitle}{this.state.activeQuestion}</em></h3>
+                            <h3 className="form-title">Annotating Image #{this.state.imgNum} of</h3>
+                            <h3 className="form-title"><em>{projectTitle}</em></h3>
                             
                             <div className="display-questions">
                                 {this.displayQuestions()}
@@ -379,14 +424,24 @@ class AnnotatePage extends Component {
                             </div> 
 
                             <div className="form-group next-btn">
-                                <button type="button" className="btn btn-primary" disabled={loading} >Next</button>
-                                {loading &&
-                                    <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                                }
+                                <button type="button" onClick={this.handleSubmit} className="btn btn-primary" disabled={loading} >Next</button>
                             </div>
                         </form>
                     </div>
                 </div>
+        }
+        else if (this.state.isFullyAnnotated == true) {
+            returnVal = <div className="annotate-cont">
+                    <div className="col-sm-8 img-cont" >
+                        <img src={path}/>
+                    </div>
+                    <div className="col-sm-4 form-cont" >
+                        <form name="form-horizontal" className="form-annotate">
+                            <h3 className="form-title">All images in <em>{projectTitle}</em></h3>
+                            <h3 className="form-title">have been annotated.</h3>
+                        </form>
+                    </div>
+            </div>
         }
 
         return (

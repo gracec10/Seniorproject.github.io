@@ -67,8 +67,7 @@ class ProjectSummary extends Component {
                         <h4 className="question-text word-wrap">Project: {this.props.title}</h4>
                         <h5 className="word-wrap">Description: {this.props.description}</h5>
                         <h5 className="word-wrap">Access Level: {access}</h5>
-                        <h5 className="word-wrap">Project Admins: {this.props.admins}</h5>
-                        <h5 className="word-wrap">Project Researchers: {this.props.researchers}</h5>
+                        
                         <h5 className="word-wrap">Questions: {this.props.questions}</h5>
                         <h5 className="word-wrap">Images: {this.props.images}</h5>
                     </div>
@@ -80,3 +79,5 @@ class ProjectSummary extends Component {
 }
 
 export { ProjectSummary }; 
+//<h5 className="word-wrap">Project Admins: {this.props.admins}</h5>
+//<h5 className="word-wrap">Project Researchers: {this.props.researchers}</h5>

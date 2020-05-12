@@ -46,6 +46,7 @@ class CreateProjectPage extends Component {
             error: ''
         };
 
+        this.addCollaborators = this.addCollaborators.bind(this);
         this.onFileChange = this.onFileChange.bind(this);
         this.onFileUpload = this.onFileUpload.bind(this);
         this.handleMoveQuestion = this.handleMoveQuestion.bind(this);
@@ -171,7 +172,7 @@ class CreateProjectPage extends Component {
         axios
             .post("http://localhost:5000/api/questions/"+projectId, question)
             .then(res => { 
-                const {token}  = res.data;      
+                const {token} = res.data;      
             })
             .catch(err =>
                 dispatch({
@@ -181,16 +182,43 @@ class CreateProjectPage extends Component {
             );
     }
 
-    image(projectId, image) {
-        console.log(image);
-        const formData = new FormData();
-        formData.append('file', image);
-
-
+    addCollaborators(collab, projectId, access) {
+        const userData = {
+            access: access,
+            projectID: projectId
+        };
+       
         axios
-            .post("http://localhost:5000/api/images/"+projectId, formData)
+            .post("http://localhost:5000/api/users/"+collab, userData)
+            .then(res => {
+                console.log(res.data);
+            })
+            .catch(err =>
+                dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+                })
+            );        
+    }
+
+    image(projectId, images) {
+               
+        let formData = new FormData();
+
+        for (const file of images) {
+            formData.append("myFiles", file);
+        }
+
+       
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+        axios
+            .post("http://localhost:5000/api/images/"+projectId, formData, config)
             .then(res => { 
-                const {token}  = res.data;      
+                //const {token}  = res.data;      
             })
             .catch(err =>
                 dispatch({
@@ -237,7 +265,6 @@ class CreateProjectPage extends Component {
         })
 
         let firstImage = this.state.selectedFiles[0];
-        
 
         const projectData = {
             title: this.state.projectTitle,
@@ -245,20 +272,29 @@ class CreateProjectPage extends Component {
             questions: questionArray,
             admins: adminArray,
             annotators: annotatorArray,
-            images: firstImage
+            images: this.state.selectedFiles
         };
-        console.log(projectData);
-
+        
         axios
             .post("http://localhost:5000/api/projects/", projectData)
             .then(res => { // res is the returned data
                 const projectId  = res.data._id; // the id of the project just created
-
+                
                 // Add all the questions to the project
                 projectData.questions.forEach(question => {
                     this.addQuestion(projectId, question);
                 });
-                //this.image(projectId, firstImage);
+
+                // Add all the admins to the project
+                projectData.admins.forEach(admin => {
+                    this.addCollaborators(admin, projectId, "Admin");
+                });
+
+                // Add all the annotators to the project
+                projectData.annotators.forEach(ann => {
+                    this.addCollaborators(ann, projectId, "Annotator");
+                });
+                this.image(projectId, projectData.images);
             })
             .catch(err =>
                 dispatch({
@@ -383,7 +419,7 @@ class CreateProjectPage extends Component {
                     <h3>Project Overview Information</h3>
                 </div>
                 
-                <form name="form-horizontal" onSubmit={this.handleSubmit}>
+                <form name="form-horizontal" enctype="multipart/form-data" onSubmit={this.handleSubmit}>
                     <div className={'form-group form-row' + (submitted && !projectTitle ? ' has-error' : '')}>
                         <label className="col-sm-4 horLabel" htmlFor="projectTitle">Project Title</label>
                         <div className="col-sm-8">
@@ -478,7 +514,7 @@ class CreateProjectPage extends Component {
                     </div>
                    
                     <div className="text-align-center padding-bottom-40"> 
-                        <input type="file" className='file-btn' multiple onChange={this.onFileChange} /> 
+                        <input type="file" name="myFiles" className='file-btn' multiple onChange={this.onFileChange} /> 
                         <button type="button" className='file-btn' onClick={this.onFileUpload}> 
                         Upload! 
                         </button> 

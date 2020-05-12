@@ -63,6 +63,7 @@ class ProjectSummaryPage extends Component {
         this.props.history.push("/annotate");
     }
 
+
     // Load projects and current user
     componentDidMount() {
         // Gets all of the projects that the current user has access to
@@ -70,6 +71,9 @@ class ProjectSummaryPage extends Component {
             .then(res => {
                 const userProjects = res.data;
                 this.setState({ loadedProjects: userProjects });
+
+       
+
             })
 
         // Gets current user and saves to state
@@ -100,7 +104,9 @@ class ProjectSummaryPage extends Component {
                         images={proj.imageIDs}
                         access={"proj.access"}>
                     </ProjectSummary>
-                </li>               
+                    <h3>Image ids: {proj.imageIDs}</h3>
+                </li>        
+                  
             );
             return (
                 <ul>

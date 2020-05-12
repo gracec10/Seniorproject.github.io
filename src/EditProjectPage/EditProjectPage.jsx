@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './EditProjectPage.css';
 import { CollaboratorButton } from '../_components/CollaboratorButton';
 import { WorkflowQuestion } from '../_components/WorkflowQuestion';
-import { setProjectId } from "../_actions/projectIdActions";
+import { setProjectId, deleteProject } from "../_actions/projectIdActions";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import axios from 'axios';
@@ -47,6 +47,31 @@ class EditProjectPage extends Component {
         this.displayCategories = this.displayCategories.bind(this);
     }
 
+    // Converts the collaborator ids to emails and saves in state
+    getCollaboratorEmails(collaborators) {
+        collaborators.forEach(collab => {
+            axios
+                .get("http://localhost:5000/api/users/id/"+collab.value)
+                .then(res => {
+                    let replaceC = this.state.collaborators.map((c) => {
+                        if (c.value != collab.value) return c;
+                        else return {
+                            id: c.id,
+                            value: res.data.email,
+                            access: c.access
+                        };
+                    })
+                    this.setState({ collaborators: replaceC });
+                })
+                .catch(err =>
+                    dispatch({
+                    type: GET_ERRORS,
+                    payload: err.response.data
+                    })
+                );      
+        });
+    }
+
     componentDidMount() {
         // Gets the project and saves the title and description to state
         axios.get("http://localhost:5000/api/projects/"+this.state.projectId)
@@ -71,7 +96,8 @@ class EditProjectPage extends Component {
                 });
                 
                 const collaborators = admins.concat(researchers);
-                this.setState({ collaborators: collaborators });               
+                this.setState({ collaborators: collaborators });    
+                this.getCollaboratorEmails(collaborators);           
             })
         // Gets all of the questions for this project and create answer array
         axios.get("http://localhost:5000/api/questions/"+this.state.projectId)
@@ -212,6 +238,41 @@ class EditProjectPage extends Component {
         }
         
     }
+
+    
+    addQuestion(projectId, question) {
+        axios
+            .post("http://localhost:5000/api/questions/"+projectId, question)
+            .then(res => { 
+                const {token} = res.data;      
+            })
+            .catch(err =>
+                dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+                })
+            );
+    }
+
+    addCollaborators(collab, projectId, access) {
+        const userData = {
+            access: access,
+            projectID: projectId
+        };
+       
+        axios
+            .post("http://localhost:5000/api/users/"+collab, userData)
+            .then(res => {
+                console.log(res.data);
+            })
+            .catch(err =>
+                dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+                })
+            );        
+    }
+
     handleSubmit(e) {
         e.preventDefault()
         this.setState({ submitted: true });
@@ -261,23 +322,37 @@ class EditProjectPage extends Component {
             images: null//firstImage
         };
 
-        /*axios
-        .post("http://localhost:5000/api/projects/", projectData)
-        .then(res => { // res is the returned data
-            const projectId  = res.data._id; // the id of the project just created
 
-            // Add all the questions to the project
-            projectData.questions.forEach(question => {
-                this.addQuestion(projectId, question);
-            });
-            //this.image(projectId, firstImage);
-        })
-        .catch(err =>
-            dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
+        this.props.deleteProject(this.state.projectId); 
+        
+        axios
+            .post("http://localhost:5000/api/projects/", projectData)
+            .then(res => { // res is the returned data
+                const projectId  = res.data._id; // the id of the project just created
+                
+                // Add all the questions to the project
+                projectData.questions.forEach(question => {
+                    this.addQuestion(projectId, question);
+                });
+
+                // Add all the admins to the project
+                projectData.admins.forEach(admin => {
+                    this.addCollaborators(admin, projectId, "Admin");
+                });
+
+                // Add all the annotators to the project
+                projectData.annotators.forEach(ann => {
+                    this.addCollaborators(ann, projectId, "Annotator");
+                });
+                //this.image(projectId, firstImage);
             })
-        );*/
+            .catch(err =>
+                dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+                })
+            );
+        
 
         this.props.history.push("/");
     }
@@ -490,6 +565,7 @@ class EditProjectPage extends Component {
 
 EditProjectPage.propTypes = {
     setProjectId: PropTypes.func.isRequired,
+    deleteProject: PropTypes.func.isRequired,
     projectIdR: PropTypes.object.isRequired
 };
 
@@ -499,5 +575,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { setProjectId }
+    { setProjectId, deleteProject }
 )(EditProjectPage);

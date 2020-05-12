@@ -25,7 +25,7 @@ class WorkflowQuestion extends Component {
                             className={"btn btn-xs move-up-down"+disabledUp} 
                             onClick={() => this.props.onMove(this.props.id, "up")}
                         >
-                            <i class="arrow up"></i>
+                            <i className="arrow up"></i>
                         </button>
                     </div>
                     <div>
@@ -34,7 +34,7 @@ class WorkflowQuestion extends Component {
                             className={"btn btn-xs move-up-down"+disabledDown} 
                             onClick={() => this.props.onMove(this.props.id, "down")}
                         >
-                            <i class="arrow down"></i>
+                            <i className="arrow down"></i>
                         </button>
                     </div>
                 </div>
@@ -50,7 +50,7 @@ class WorkflowQuestion extends Component {
                     <h4 className="question-text word-wrap">Question {this.props.id}: {this.props.text}</h4>
                     <h5 className="word-wrap">Description: {this.props.description}</h5>
                     <h5 className="word-wrap">Type: {this.props.type}</h5>
-                    <h5 className="word-wrap">{categories}</h5>
+                    <div className="word-wrap">{categories}</div>
                     <h5>Required question: {this.props.required.toString()}</h5>
                 </div>
                 <div className="col-sm-2"></div>

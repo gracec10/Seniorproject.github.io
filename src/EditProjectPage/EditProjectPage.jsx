@@ -20,9 +20,7 @@ class EditProjectPage extends Component {
             questions: [],
             collaborators: [],
 
-
             currCollab: '',
-            
             newQuestionText: '',
             newQuestionDescription: '',
             newQuestionType: 'Yes/No',
@@ -37,7 +35,6 @@ class EditProjectPage extends Component {
         };
 
         this.componentDidMount = this.componentDidMount.bind(this);
-
         this.handleMoveQuestion = this.handleMoveQuestion.bind(this);
         this.handleAddQuestion = this.handleAddQuestion.bind(this);
         this.handleRequiredCheck = this.handleRequiredCheck.bind(this);
@@ -218,7 +215,7 @@ class EditProjectPage extends Component {
     handleSubmit(e) {
         e.preventDefault()
         this.setState({ submitted: true });
-        const { projectTitle, projectDescription, returnUrl } = this.state;
+        const { projectTitle, projectDescription } = this.state;
 
         // stop here if form is invalid
         //maybe add more checks on minlength/maxlength of password?  email format?
@@ -226,16 +223,65 @@ class EditProjectPage extends Component {
             return;
         }
 
-        this.setState({ loading: true });
-        userService.login(projectTitle, projectDescription)
-            .then(
-                user => {
-                    const { from } = this.props.location.state || { from: { pathname: "/" } };
-                    this.props.history.push(from);
-                },
-                error => this.setState({ error, loading: false })
-            );
+        const questionArray = this.state.questions.map((q) => {
+            console.log(q.categories);
+            const categories = q.categories;// == [] ? [] : q.categories.split(",");
+            return {
+                question: q.text,
+                description: q.description,
+                type: q.type,
+                categories: categories,
+                required: q.required
+            }
+        })
+
+        const admins = this.state.collaborators.filter((c) => {
+            return c.access == "Admin";
+        })
+        const adminArray = admins.map((a) => {
+            return a.value;
+        })
+
+        const annotators = this.state.collaborators.filter((c) => {
+            return c.access == "Annotator";
+        })
+        const annotatorArray = annotators.map((a) => {
+            return a.value;
+        })
+
+        //let firstImage = this.state.selectedFiles[0];
+        
+
+        const projectData = {
+            title: this.state.projectTitle,
+            description: this.state.projectDescription,
+            questions: questionArray,
+            admins: adminArray,
+            annotators: annotatorArray,
+            images: null//firstImage
+        };
+
+        /*axios
+        .post("http://localhost:5000/api/projects/", projectData)
+        .then(res => { // res is the returned data
+            const projectId  = res.data._id; // the id of the project just created
+
+            // Add all the questions to the project
+            projectData.questions.forEach(question => {
+                this.addQuestion(projectId, question);
+            });
+            //this.image(projectId, firstImage);
+        })
+        .catch(err =>
+            dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+            })
+        );*/
+
+        this.props.history.push("/");
     }
+
     handleMoveQuestion(qId, dir){
         const questions = this.state.questions;
         let newQuestions = questions;
@@ -402,9 +448,9 @@ class EditProjectPage extends Component {
                     <div className={'form-group form-row'}>
                         <label className="col-sm-4 horlabel" htmlFor="newQuestionRequired">Required Question</label>
                         
-                        <label class="container-ch col-sm-8">
+                        <label className="container-ch col-sm-8">
                             <input type="checkbox" className="checkbox ch" name="newQuestionRequired" id="requiredCheck" onClick={this.handleRequiredCheck} checked={newQuestionRequired}/>
-                            <span class="checkmark"></span>
+                            <span className="checkmark"></span>
                         </label>
                     </div> 
                     {questionError}
@@ -426,21 +472,16 @@ class EditProjectPage extends Component {
                     </div>
                    
                     <div className="text-align-center padding-bottom-40"> 
-                        <input type="file" className='file-btn' onChange={this.onFileChange} /> 
-                        <button className='file-btn' onClick={this.onFileUpload}> 
+                        <input type="file" className='file-btn' multiple onChange={this.onFileChange} /> 
+                        <button type="button" className='file-btn' onClick={this.onFileUpload}> 
                         Upload! 
                         </button> 
                     </div> 
                     <div className="form-group submit padding-bottom-20">
                         <button className="btn btn-primary" disabled={loading} >Update Project</button>
-                        {loading &&
-                            <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                        }
                     </div>
-                    {error &&
-                        <div className={'alert alert-danger'}>{error}</div>
-                    }
                 </form>
+
             </div>
         );
     }

@@ -71,9 +71,6 @@ class ProjectSummaryPage extends Component {
             .then(res => {
                 const userProjects = res.data;
                 this.setState({ loadedProjects: userProjects });
-
-       
-
             })
 
         // Gets current user and saves to state

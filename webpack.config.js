@@ -6,12 +6,14 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx']
     },
+
     module: {
         rules: [
             {
                 test: /\.jsx?$/,
                 loader: 'babel-loader'
             },
+
             {
                 test: /\.css$/,
                 use: [
@@ -33,4 +35,5 @@ module.exports = {
             apiUrl: 'http://localhost:5000'
         })
     }
+
 }

@@ -462,9 +462,9 @@ class CreateProjectPage extends Component {
                     <div className={'form-group form-row'}>
                         <label className="col-sm-4 horlabel" htmlFor="newQuestionRequired">Required Question</label>
                         
-                        <label class="container-ch col-sm-8">
+                        <label className="container-ch col-sm-8">
                             <input type="checkbox" className="checkbox ch" name="newQuestionRequired" id="requiredCheck" onClick={this.handleRequiredCheck} checked={newQuestionRequired}/>
-                            <span class="checkmark"></span>
+                            <span className="checkmark"></span>
                         </label>
                     </div> 
                     {questionError}

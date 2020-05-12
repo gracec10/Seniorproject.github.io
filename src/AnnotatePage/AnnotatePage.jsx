@@ -23,8 +23,10 @@ class AnnotatePage extends Component {
             collapsedBar: "",
             projectTitle: 'Project Title',
             projectDescription: 'Project Description',
+            loadedProject: {},
             questions: [],
             answers: [],
+            images: [],
             tempQuestions: [
                 {id: 1,
                 text: "Is there a bird?", 
@@ -170,8 +172,6 @@ class AnnotatePage extends Component {
             note.focus();
             note.scrollIntoView({behavior: "smooth", block: "center"});
         }
-
-        
     }
 
     componentDidMount() {
@@ -181,10 +181,19 @@ class AnnotatePage extends Component {
         // Gets the project and saves the title and description to state
         axios.get("http://localhost:5000/api/projects/"+this.state.projectId)
             .then(res => {
-                console.log("Project data")
+                console.log("Project data");
                 console.log(res.data);
                 this.setState({ projectTitle: res.data.title });
                 this.setState({ projectDescription: res.data.description });
+                this.setState({ loadedProject: res.data });
+            })
+
+        // Get all of the images
+        axios.get("http://localhost:5000/api/images/"+this.state.projectId)
+            .then(res => {
+                console.log("Image data");
+                console.log(res.data);    
+                this.setState({ images: res.data });            
             })
 
         // Gets all of the questions for this project and create answer array
@@ -340,11 +349,15 @@ class AnnotatePage extends Component {
             (this.state.activeQuestion == 0) ? //== this.state.questions.length + 1) ?
             "optional-note-active" : "";
         
+        let path="http://localhost:5000/black";
+        if (this.state.images.length > 0)  path = "http://localhost:5000/"+this.state.images[0].name;
+        console.log("Path--"+path);
+
         if (window.innerWidth > 767) {
             returnVal = 
                 <div className="annotate-cont">
                     <div className="col-sm-8 img-cont" >
-                        <img src={"https://images.unsplash.com/photo-1507477338202-487281e6c27e?ixlib=rb-1.2.1&w=1000&q=80"} />
+                        <img src={path}/>
                     </div>
                     <div className="col-sm-4 form-cont" >
                         <form name="form-horizontal" className="form-annotate">
